@@ -10,6 +10,7 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{xparse}
+\usepackage{fancyhdr}
 %\usepackage{pdfpages}
 
 % Nastavení pevných mezer za jedno a dvou znaková slova
@@ -31,6 +32,21 @@
   }
 \ExplSyntaxOff
 
+\makeatletter
+
+\def\title#1{\gdef\inserttitle{#1}\gdef\@title{#1}\hypersetup{pdftitle={#1}}}
+\def\author#1{\gdef\insertauthor{#1}\gdef\@author{#1}\hypersetup{pdfauthor={#1}}}
+\def\supervisor#1{\gdef\insertsupervisor{#1}}
+\def\institution#1{\gdef\insertinstitution{#1}\gdef\@institution{#1}\hypersetup{pdfproducer={#1}}}
+\def\faculty#1{\gdef\insertfaculty{#1}}
+\def\department#1{\gdef\insertdepartment{#1}}
+\def\location#1{\gdef\insertlocation{#1}}
+\def\papertype#1{\gdef\insertpapertype{#1}}
+\def\subject#1{\gdef\insertsubject{#1}\hypersetup{pdfsubject={#1}}}
+\def\keywords#1{\gdef\insertkeywords{#1}\hypersetup{pdfkeywords={#1}}}
+
+\makeatother
+
 \usepackage[
   backend=biber,        % defaultní možnost, nastaví unicode a několik dalších vlastností
   style=iso-numeric,    % iso-numeric pro číselné uspořádnání nebo iso-authoryear pro uspořádání pomocí autorů
@@ -51,32 +67,14 @@
 % Nastavení řádkování
 \usepackage{setspace} \onehalfspacing
 
-% === Nastavení hlavních proměnných ===
-\newcommand{\autor}{Moje jméno}
-\newcommand{\skola}{Moje škola}
-\newcommand{\fakulta}{Moje fakulta}
-\newcommand{\nazev}{Název práce}
-\newcommand{\vedouciPrace}{Vedoucí práce}
-\newcommand{\typPrace}{Typ práce}
-\newcommand{\misto}{Místo publikace}
-
-
 % Nastavení prolinkování odkazů v dokumentu
-\usepackage[pdftex,
-  pdfauthor={Jiri Alexandrovic},
-  pdftitle={Technicke prostredky informacnich systemu},
-  pdfsubject={},
-  pdfkeywords={},
-  pdfproducer={Ceska zemedelska univerzita},
-  pdfcreator={pdflatex}]{hyperref}
-
+\usepackage{hyperref}
 \hypersetup{
+    pdfcreator = {\LaTeX\ with\ Bib\LaTeX},
     colorlinks = false,
     hidelinks
 }
 
-\usepackage{fancyhdr}
-%\usepackage{graphicx}
 
 % Nastavení cesty k obrázkům
 \graphicspath{{pics/}}
@@ -89,6 +87,18 @@
 % Pojmenovaní obrázku
 \usepackage{caption}
 \captionsetup[figure]{name=Obr.}
+
+% === Nastavení proměnných ===
+\title{Název práce}
+\author{Autor práce}
+\supervisor{Vedoucí práce}
+\institution{Škola}
+\faculty{Fakulta}
+\department{Obor}
+\location{Místo vytvoření}
+\papertype{Typ práce}
+\subject{Obsah dokumentu}
+\keywords{Klíčová slova}
 
 % === Začátek dokumentu ===
 \begin{document}
@@ -155,9 +165,8 @@ obsah a nějaký text~\cite{ref:proc:powersaving2}
 
 %\input{content/01obsah}
 
-\clearpage
-
 % === Zdroje ===
+\clearpage
 \phantomsection % přidání odkazu do PDF záložek
 \addcontentsline{toc}{section}{Seznam použitých zdrojů}
 \renewcommand{\refname}{Seznam použitých zdrojů}
