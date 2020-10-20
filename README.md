@@ -1,0 +1,1 @@
+# Technické prostředky informačních systémů.

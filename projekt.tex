@@ -1,0 +1,166 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[left=3.5cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{enumerate}
+\usepackage{gensymb,marvosym}
+\usepackage{times}
+\usepackage{tabularx}
+%\usepackage{graphicx}
+\usepackage{xparse}
+\usepackage{pdfpages}
+
+% Nastavení pevných mezer za jedno a dvou znaková slova
+\ExplSyntaxOn
+  \tl_new:N \l_wave_tmpa_tl
+  \cs_new:Npn \wave_putter:n #1 {
+      \tl_set:Nn \l_wave_tmpa_tl { #1 }
+      \regex_replace_all:nnN {([\ \t\n\-\x{28}]{1})(.{1,3})([\ \t\n]{1})} {\1\2\-} \l_wave_tmpa_tl
+      \regex_replace_all:nnN {([\ \t\n\-\x{28}]{1})(.{1,3})([\ \t\n]{1})} {\1\2\-} \l_wave_tmpa_tl
+      \tl_use:N \l_wave_tmpa_tl
+  }
+  \cs_generate_variant:Nn \wave_putter:n { e }
+
+  \NewDocumentCommand \wavePutter { m } {
+    \input{ content/#1 }
+    \wave_putter:e { #1 }
+    %\wave_putter:e { \input{content/02obsah} }
+    %\wave_putter:e { \section{Second section} }
+  }
+\ExplSyntaxOff
+
+\usepackage[
+  backend=biber,        % defaultní možnost, nastaví unicode a několik dalších vlastností
+  style=iso-numeric,    % iso-numeric pro číselné uspořádnání nebo iso-authoryear pro uspořádání pomocí autorů
+]{biblatex}
+
+\addbibresource{literatura.bib}
+
+% Více řádků v jednom pro tabulku
+\usepackage{multirow}
+
+% Pro tečkovanou čáru pro podpis
+\usepackage{arydshln}
+
+\usepackage[none]{hyphenat} \sloppy
+\clubpenalty 10000
+\widowpenalty 10000
+
+% Nastavení řádkování
+\usepackage{setspace} \onehalfspacing
+
+% === Nastavení hlavních proměnných ===
+\newcommand{\autor}{Jiří Alexandrovič}
+\newcommand{\skola}{Česká zemědělská univerzita v Praze}
+\newcommand{\fakulta}{Technická fakulta}
+\newcommand{\nazev}{Technické prostředky informačních systémů}
+\newcommand{\vedouciPrace}{Ing. Jan Lešetický, Ph.D.}
+\newcommand{\typPrace}{bakalářská práce}
+
+
+% Nastavení prolinkování odkazů v dokumentu
+\usepackage[pdftex,
+  pdfauthor={Jiri Alexandrovic},
+  pdftitle={Technicke prostredky informacnich systemu},
+  pdfsubject={},
+  pdfkeywords={},
+  pdfproducer={Ceska zemedelska univerzita},
+  pdfcreator={pdflatex}]{hyperref}
+
+\hypersetup{
+    colorlinks = false,
+    hidelinks
+}
+
+\usepackage{fancyhdr}
+%\usepackage{graphicx}
+
+% Nastavení cesty k obrázkům
+\graphicspath{{pics/}}
+
+% Funkce pro vkládání grafů
+\usepackage{float}
+\newfloat{graf}{hbtp}{ext}
+\floatname{graf}{Graf}
+
+% Pojmenovaní obrázku
+\usepackage{caption}
+\captionsetup[figure]{name=Obr.}
+
+% === Začátek dokumentu ===
+\begin{document}
+\pagestyle{empty}
+
+%\include{titulniStrana}
+
+% Vložení strány se zadáním
+%\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+%\includegraphics{../zadani.pdf}
+%\restoregeometry
+%\clearpage
+
+
+%\include{cestneProhlaseni}
+
+%\include{podekovani}
+
+% === Nastavení obsahů pro dokumenty ===
+% tabulka s obsahem
+%\tableofcontents
+
+% seznam zkratek
+% pouze u většího množství zkratek
+%\include{seznamZkratek}
+
+% seznam tabulek
+% pouze pokud jsou použity více jak tři tabulky
+%\newpage
+%\listoftables
+%\thispagestyle{empty}
+
+% seznam obrázků
+% pouze pokud jsou použity více jak tři obrázky
+%\newpage
+%\listoffigures
+%\thispagestyle{empty}
+
+\setcounter{page}{1} %cislo strany
+\thispagestyle{empty}
+%\pagestyle{empty}
+
+\newpage
+
+\pagestyle{fancy} %vlastni zahlavi/zapati
+\renewcommand{\headrulewidth}{0.5pt} %bez linky v zahlavi
+\renewcommand{\footrulewidth}{0pt} %linka v zapati
+\lhead{\leftmark}       \chead{} \rhead{} %pole zahlavi (prazdna)
+\lfoot{} \cfoot{} \rfoot{\thepage} %pole zapati
+
+
+\newcommand{\myNewCommandIsIMBA}[1]{\input{./content/{#1}}}
+
+%\wavePutter{Test test A a a a t test test. No a taky už ještě ž týden.}
+
+%\wavePutter{\skola}
+
+\wavePutter{01obsah}
+
+obsah a nějaký text~\cite{ref:proc:powersaving2}
+
+%\include{content/03obsah}
+%\myNewCommandIsIMBA{01obsah}
+
+%\input{content/01obsah}
+
+\clearpage
+
+% === Zdroje ===
+\phantomsection % přidání odkazu do PDF záložek
+\addcontentsline{toc}{section}{Seznam použitých zdrojů}
+\renewcommand{\refname}{Seznam použitých zdrojů}
+
+\printbibliography
+
+\end{document}
