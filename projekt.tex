@@ -8,9 +8,9 @@
 \usepackage{gensymb,marvosym}
 \usepackage{times}
 \usepackage{tabularx}
-%\usepackage{graphicx}
+\usepackage{graphicx}
 \usepackage{xparse}
-\usepackage{pdfpages}
+%\usepackage{pdfpages}
 
 % Nastavení pevných mezer za jedno a dvou znaková slova
 \ExplSyntaxOn
@@ -52,12 +52,13 @@
 \usepackage{setspace} \onehalfspacing
 
 % === Nastavení hlavních proměnných ===
-\newcommand{\autor}{Jiří Alexandrovič}
-\newcommand{\skola}{Česká zemědělská univerzita v Praze}
-\newcommand{\fakulta}{Technická fakulta}
-\newcommand{\nazev}{Technické prostředky informačních systémů}
-\newcommand{\vedouciPrace}{Ing. Jan Lešetický, Ph.D.}
-\newcommand{\typPrace}{bakalářská práce}
+\newcommand{\autor}{Moje jméno}
+\newcommand{\skola}{Moje škola}
+\newcommand{\fakulta}{Moje fakulta}
+\newcommand{\nazev}{Název práce}
+\newcommand{\vedouciPrace}{Vedoucí práce}
+\newcommand{\typPrace}{Typ práce}
+\newcommand{\misto}{Místo publikace}
 
 
 % Nastavení prolinkování odkazů v dokumentu
@@ -93,22 +94,22 @@
 \begin{document}
 \pagestyle{empty}
 
-%\include{titulniStrana}
+\include{titulniStrana}
 
 % Vložení strány se zadáním
-%\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
-%\includegraphics{../zadani.pdf}
-%\restoregeometry
-%\clearpage
+\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+\includegraphics{../zadani.pdf}
+\restoregeometry
+\clearpage
 
 
-%\include{cestneProhlaseni}
+\include{cestneProhlaseni}
 
-%\include{podekovani}
+\include{podekovani}
 
 % === Nastavení obsahů pro dokumenty ===
 % tabulka s obsahem
-%\tableofcontents
+\tableofcontents
 
 % seznam zkratek
 % pouze u většího množství zkratek
