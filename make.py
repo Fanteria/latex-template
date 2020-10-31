@@ -8,28 +8,33 @@ import subprocess
 
 class TemplateMake:
 
-    bin_folder="bin/"
-    pic_folder="pics/"
+    bin_folder=""
+    pic_folder=""
+    content_folder=""
 
-    content_folder="content/"
-
-    project_path="./"
-    project_name="projekt"
-    pdf_name=".pdf"
+    project_path=""
+    project_name=""
+    pdf_name=""
 
     usr_pwd=""
-    own_pwd="own"
+    own_pwd=""
 
-    frsOut = ""
-    bibOut = ""
-    secOut = ""
+    frsOut=""
+    bibOut=""
+    secOut=""
 
 
     def __init__(self):
+        self.bin_folder="bin/"
+        self.pic_folder="pics/"
+        self.content_folder="content/"
+
         self.project_path=os.getcwd()+"/"
         self.project_name="projekt"
         self.pdf_name=self.project_name+".pdf"
-        print("TemplateMake init.")
+
+        self.usr_pwd=""
+        self.own_pwd="own"
 
     ###### PRIVATE FUNCTIONS ######
     def __nonbreaking_space(self, text):
@@ -223,6 +228,10 @@ class TemplateMake:
             self.help()
             return
 
+        if arg == "test":
+            self.test()
+            return
+
         print("Command " + arg + " does not exist.")
 
     def test(self):
@@ -244,17 +253,26 @@ class TemplateMake:
 
 ###### MAIN ######
 if __name__ == "__main__":
-#    project_path=os.getcwd()+"/"
-#    pdf_name=project_name+pdf_name
-
 
     run=TemplateMake()
 
-    run.test()
+    if len(sys.argv) == 1:
+        run.runtime("build")
+        exit()
 
-#    if len(sys.argv) == 1:
-#        run.runtime("build")
-#        exit()
-#
-#    for i in range(1, len(sys.argv)):
-#        run.runtime(sys.argv[i])
+    if len(sys.argv) == 2 and sys.argv[1] ==  "run":
+        print("Command: ", end="")
+        try:
+            stdin=input()
+        except:
+            exit()
+
+        while stdin != "exit":
+            run.runtime(stdin)
+            print("Next command: ", end="")
+            stdin=input()
+
+        exit()
+
+    for i in range(1, len(sys.argv)):
+        run.runtime(sys.argv[i])
