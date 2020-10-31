@@ -6,23 +6,29 @@ import shutil
 import zipfile
 import subprocess
 
-bin_folder="bin/"
-pic_folder="pics/"
-project_path="./"
-project_name="projekt"
-pdf_name=".pdf"
-content_folder="content/"
-
-usr_pwd=""
-own_pwd="own"
-
-frsOut = ""
-bibOut = ""
-secOut = ""
-
 class TemplateMake:
 
+    bin_folder="bin/"
+    pic_folder="pics/"
+
+    content_folder="content/"
+
+    project_path="./"
+    project_name="projekt"
+    pdf_name=".pdf"
+
+    usr_pwd=""
+    own_pwd="own"
+
+    frsOut = ""
+    bibOut = ""
+    secOut = ""
+
+
     def __init__(self):
+        self.project_path=os.getcwd()+"/"
+        self.project_name="projekt"
+        self.pdf_name=self.project_name+".pdf"
         print("TemplateMake init.")
 
     ###### PRIVATE FUNCTIONS ######
@@ -57,22 +63,22 @@ class TemplateMake:
 
     ###### BUILD FUNCTION ######
     def build(self):
-        bin=project_path+bin_folder
+        bin=self.project_path+self.bin_folder
         if not os.path.exists(bin):
             os.makedirs(bin)
 
-        sourceContent=project_path+content_folder
-        content=project_path+bin_folder+content_folder
+        sourceContent=self.project_path+self.content_folder
+        content=self.project_path+self.bin_folder+self.content_folder
         if not os.path.exists(content):
             os.makedirs(content)
 
-        shutil.copy(project_path+project_name+".tex",bin+project_name+".tex")
-        shutil.copy(project_path+"literatura.bib",bin+"literatura.bib")
-        shutil.copy(project_path+"zadani.pdf",bin+"zadani.pdf")
+        shutil.copy(self.project_path+self.project_name+".tex",bin+self.project_name+".tex")
+        shutil.copy(self.project_path+"literatura.bib",bin+"literatura.bib")
+        shutil.copy(self.project_path+"zadani.pdf",bin+"zadani.pdf")
 
-        self.__texfile_process("cestneProhlaseni.tex", project_path, bin)
-        self.__texfile_process("titulniStrana.tex", project_path, bin)
-        self.__texfile_process("podekovani.tex", project_path, bin)
+        self.__texfile_process("cestneProhlaseni.tex", self.project_path, bin)
+        self.__texfile_process("titulniStrana.tex", self.project_path, bin)
+        self.__texfile_process("podekovani.tex", self.project_path, bin)
 
         for i in os.listdir(sourceContent):
             if i.endswith(".tex"):
@@ -82,41 +88,41 @@ class TemplateMake:
             print("Something went wrong. Cannot acess bin folder.")
             return
 
-        pdfcmd = "cd " + bin + "; pdflatex -interaction=nonstopmode " + project_name + ".tex"
-        bibcmd = "cd " + bin + "; biber " + project_name + ".bcf"
+        pdfcmd = "cd " + bin + "; pdflatex -interaction=nonstopmode " + self.project_name + ".tex"
+        bibcmd = "cd " + bin + "; biber " + self.project_name + ".bcf"
 
         try:
-            frsOut = subprocess.check_output(pdfcmd , shell=True)
+            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
         except:
             print("Something in firs compilation.tex files is wrong. Exception:", sys.exc_info()[0])
 
         try:
-            bibOut = subprocess.check_output(bibcmd , shell=True)
+            self.bibOut = subprocess.check_output(bibcmd , shell=True)
         except:
             print("Something in bibliography files is wrong. Exception:", sys.exc_info()[0])
 
         try:
-            frsOut = subprocess.check_output(pdfcmd , shell=True)
+            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
         except:
             print("Something in second compilation.tex files is wrong. Exception:", sys.exc_info()[0])
 
-        shutil.move(bin+pdf_name, project_path+pdf_name)
+        shutil.move(bin+self.pdf_name, self.project_path+self.pdf_name)
 
     def clean(self):
-        bin=project_path+bin_folder
+        bin=self.project_path+self.bin_folder
         shutil.rmtree(bin,ignore_errors=True)
 
     def clear(self):
         self.clean()
 
-        file_path=project_path+pdf_name
+        file_path=self.project_path+self.pdf_name
         if os.path.exists(file_path):
             try:
                 os.remove(file_path)
             except OSError as e:
                 print("Error: %s : %s" % (file_path, e.strerror))
 
-        file_path=project_path + project_name + ".zip"
+        file_path=self.project_path + self.project_name + ".zip"
         if os.path.exists(file_path):
             try:
                 os.remove(file_path)
@@ -124,26 +130,26 @@ class TemplateMake:
                 print("Error: %s : %s" % (file_path, e.strerror))
 
     def pack(self):
-        zip = zipfile.ZipFile(project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
+        zip = zipfile.ZipFile(self.project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
 
-        zip.write(project_path+"LICENSE","./"+"LICENSE")
-        zip.write(project_path+"README.md","./"+"README.md")
+        zip.write(self.project_path+"LICENSE","./"+"LICENSE")
+        zip.write(self.project_path+"README.md","./"+"README.md")
 
-        zip.write(project_path+project_name+".tex","./"+project_name+".tex")
-        zip.write(project_path+"literatura.bib","./"+"literatura.bib")
-        zip.write(project_path+"zadani.pdf","./"+"zadani.pdf")
+        zip.write(self.project_path+self.project_name+".tex","./"+self.project_name+".tex")
+        zip.write(self.project_path+"literatura.bib","./"+"literatura.bib")
+        zip.write(self.project_path+"zadani.pdf","./"+"zadani.pdf")
 
-        zip.write(project_path+"cestneProhlaseni.tex","./"+"cestneProhlaseni.tex")
-        zip.write(project_path+"titulniStrana.tex","./"+"titulniStrana.tex")
-        zip.write(project_path+"podekovani.tex","./"+"podekovani.tex")
+        zip.write(self.project_path+"cestneProhlaseni.tex","./"+"cestneProhlaseni.tex")
+        zip.write(self.project_path+"titulniStrana.tex","./"+"titulniStrana.tex")
+        zip.write(self.project_path+"podekovani.tex","./"+"podekovani.tex")
 
-        self.__zip_folder(project_path, content_folder, zip)
-        self.__zip_folder(project_path, pic_folder, zip)
+        self.__zip_folder(self.project_path, self.content_folder, zip)
+        self.__zip_folder(self.project_path, self.pic_folder, zip)
 
         zip.close()
 
     def encrypt(self, own_passwd, usr_passwd=""):
-        file_path=project_path+pdf_name
+        file_path=self.project_path+self.pdf_name
         if not os.path.exists(file_path):
             print("Pdf for encryption does not exist.")
 
@@ -162,7 +168,7 @@ class TemplateMake:
                                 modify_other=False,
                                 print_highres=True,
                                 print_lowres=True)
-        encrypt=pikepdf.Encryption(user=usr_passwd, owner=own_passwd, allow=permiss)
+        encrypt=pikepdf.Encryption(user=self.usr_pwd, owner=self.own_pwd, allow=permiss)
         pdf=pikepdf.Pdf.open(file_path,allow_overwriting_input=True)
         pdf.save(file_path, encryption=encrypt)
         pdf.close()
@@ -170,14 +176,14 @@ class TemplateMake:
         del pikepdf
 
     def cleanup(self):
-        for f in os.listdir(project_path):
+        for f in os.listdir(self.project_path):
             if (
             f.endswith(".aux") or f.endswith(".bcf") or
             f.endswith(".log") or f.endswith(".out") or
             f.endswith(".blg") or f.endswith(".toc") or
             f.endswith(".run.xml")):
                 try:
-                    os.remove(os.path.join(project_path, f))
+                    os.remove(os.path.join(self.project_path, f))
                 except OSError as e:
                     print("Error: %s : %s" % (f, e.strerror))
 
@@ -206,7 +212,7 @@ class TemplateMake:
             return
 
         if arg == "encrypt":
-            self.encrypt(own_pwd)
+            self.encrypt(self.own_pwd)
             return
 
         if arg == "cleanup":
@@ -219,18 +225,36 @@ class TemplateMake:
 
         print("Command " + arg + " does not exist.")
 
+    def test(self):
+        print("build")
+        self.runtime("build")
+        print("pack")
+        self.runtime("pack")
+        print("encrypt")
+        self.runtime("encrypt")
+        print("clean")
+        self.runtime("clean")
+        print("clear")
+        self.runtime("clear")
+        print("cleanup")
+        self.runtime("cleanup")
+        print("help")
+        self.runtime("help")
+
 
 ###### MAIN ######
 if __name__ == "__main__":
-    project_path=os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))+"/"
-    pdf_name=project_name+pdf_name
+#    project_path=os.getcwd()+"/"
+#    pdf_name=project_name+pdf_name
 
 
     run=TemplateMake()
 
-    if len(sys.argv) == 1:
-        run.runtime("build")
-        exit()
+    run.test()
 
-    for i in range(1, len(sys.argv)):
-        run.runtime(sys.argv[i])
+#    if len(sys.argv) == 1:
+#        run.runtime("build")
+#        exit()
+#
+#    for i in range(1, len(sys.argv)):
+#        run.runtime(sys.argv[i])
