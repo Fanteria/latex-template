@@ -9,28 +9,8 @@
 \usepackage{times}
 \usepackage{tabularx}
 \usepackage{graphicx}
-\usepackage{xparse}
 \usepackage{fancyhdr}
 %\usepackage{pdfpages}
-
-% Nastavení pevných mezer za jedno a dvou znaková slova
-\ExplSyntaxOn
-  \tl_new:N \l_wave_tmpa_tl
-  \cs_new:Npn \wave_putter:n #1 {
-      \tl_set:Nn \l_wave_tmpa_tl { #1 }
-      \regex_replace_all:nnN {([\ \t\n\-\x{28}]{1})(.{1,3})([\ \t\n]{1})} {\1\2\-} \l_wave_tmpa_tl
-      \regex_replace_all:nnN {([\ \t\n\-\x{28}]{1})(.{1,3})([\ \t\n]{1})} {\1\2\-} \l_wave_tmpa_tl
-      \tl_use:N \l_wave_tmpa_tl
-  }
-  \cs_generate_variant:Nn \wave_putter:n { e }
-
-  \NewDocumentCommand \wavePutter { m } {
-    \input{ content/#1 }
-    \wave_putter:e { #1 }
-    %\wave_putter:e { \input{content/02obsah} }
-    %\wave_putter:e { \section{Second section} }
-  }
-\ExplSyntaxOff
 
 \makeatletter
 
@@ -48,8 +28,8 @@
 \makeatother
 
 \usepackage[
-  backend=biber,        % defaultní možnost, nastaví unicode a několik dalších vlastností
-  style=iso-numeric,    % iso-numeric pro číselné uspořádnání nebo iso-authoryear pro uspořádání pomocí autorů
+  backend=biber,     % defaultní možnost, nastaví unicode a několik dalších vlastností
+  style=iso-numeric, % iso-numeric pro číselné uspořádnání nebo iso-authoryear pro uspořádání pomocí autorů
 ]{biblatex}
 
 \addbibresource{literatura.bib}
@@ -106,7 +86,7 @@
 
 \include{titulniStrana}
 
-% Vložení strány se zadáním
+% Vložení stránky se zadáním
 \newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
 \includegraphics{../zadani.pdf}
 \restoregeometry
@@ -150,20 +130,7 @@
 \lfoot{} \cfoot{} \rfoot{\thepage} %pole zapati
 
 
-\newcommand{\myNewCommandIsIMBA}[1]{\input{./content/{#1}}}
-
-%\wavePutter{Test test A a a a t test test. No a taky už ještě ž týden.}
-
-%\wavePutter{\skola}
-
-\wavePutter{01obsah}
-
-obsah a nějaký text~\cite{ref:proc:powersaving2}
-
-%\include{content/03obsah}
-%\myNewCommandIsIMBA{01obsah}
-
-%\input{content/01obsah}
+\input{content/01obsah.tex}
 
 % === Zdroje ===
 \clearpage
