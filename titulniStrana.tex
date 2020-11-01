@@ -3,22 +3,23 @@
 
   \vfill
 
-	{\LARGE \insertinstitution \par}
-	{\Large \insertfaculty \par}
+	{\LARGE \institution \par}
+	{\Large \faculty \par}
 
 	\vfill
 
-	{\huge\bfseries \inserttitle \par}
-	{\Large \insertpapertype \par}
+	{\huge\bfseries \doctitle \par}
+	{\Large \papertype \par}
 
   \vfill
 
-  {\Large Vedoucí práce: \insertsupervisor \par}
-	{\Large Autor práce: {\insertauthor} \par}
+
+  {\Large \printsupervisor{\supervisor}  \par}
+	{\Large \printautor{\docauthor} \par}
 
 	\vspace{1.5cm}
 
-	{\scshape\large \insertlocation ~ \the\year \par}
+	{\scshape\large \location ~ \the\year \par}
 
   \vfill
 \end{titlepage}
