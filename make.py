@@ -4,25 +4,71 @@ import re
 import sys
 import shutil
 import zipfile
+import unicodedata
 import subprocess
+import xml.etree.ElementTree as ET
+
+class Variables:
+
+    def __init__(self, title="", author="", supervisor="",
+                    institution="", faculty="", department="",
+                    location="", papertype="", subject="", keywords=""):
+
+        self.vars = {
+            "doctitle": ("pdftitle", title),
+            "docauthor": ("pdfauthor", author),
+            "supervisor": ("", supervisor),
+            "institution": ("pdfproducer", institution),
+            "faculty": ("", faculty),
+            "department": ("", department),
+            "location": ("", location),
+            "papertype": ("", papertype),
+            "subject": ("pdfsubject", subject),
+            "keywords": ("pdfkeywords", keywords)
+        }
+
+        self.get_metadata_list()
+
+    def __convert(self, data):
+        data = unicodedata.normalize('NFKD', data)
+        output = ''
+        for c in data:
+            if not unicodedata.combining(c):
+                output += c
+        return output
+
+    def get_metadata_list(self):
+        list = []
+        for i in self.vars:
+            if self.vars[i][0] != "":
+                list.append((self.vars[i][0], self.__convert(self.vars[i][1])))
+        return list
+
+    def get_metadata_string(self):
+        ret = ""
+        list=self.get_metadata_list()
+        for i in list:
+            ret += "\t" + i[0] + "={" + i[1] + "},\n"
+
+        ret += "\tpdfcreator = {\LaTeX\ with\ Bib\LaTeX},\n"
+        ret += "\tcolorlinks = false,\n"
+        ret += "\thidelinks\n"
+        return ret
+
+    def get_commands_list(self):
+        list = []
+        for i in self.vars:
+            list.append((i, self.vars[i][1]))
+        return list
+
+    def get_commands_string(self):
+        ret = ""
+        for i in self.get_commands_list():
+            ret+= "\\newcommand*{\\" + i[0] + "}{" + i[1] + "}\n"
+        return ret
+
 
 class TemplateMake:
-
-    bin_folder=""
-    pic_folder=""
-    content_folder=""
-
-    project_path=""
-    project_name=""
-    pdf_name=""
-
-    usr_pwd=""
-    own_pwd=""
-
-    frsOut=""
-    bibOut=""
-    secOut=""
-
 
     def __init__(self):
         self.bin_folder="bin/"
@@ -33,8 +79,11 @@ class TemplateMake:
         self.project_name="projekt"
         self.pdf_name=self.project_name+".pdf"
 
+        self.ask_pwd=False
         self.usr_pwd=""
         self.own_pwd="own"
+
+        self.vars=Variables()
 
     ###### PRIVATE FUNCTIONS ######
     def __nonbreaking_space(self, text):
@@ -153,7 +202,7 @@ class TemplateMake:
 
         zip.close()
 
-    def encrypt(self, own_passwd, usr_passwd=""):
+    def encrypt(self, own_passwd, usr_passwd):
         file_path=self.project_path+self.pdf_name
         if not os.path.exists(file_path):
             print("Pdf for encryption does not exist.")
@@ -173,7 +222,7 @@ class TemplateMake:
                                 modify_other=False,
                                 print_highres=True,
                                 print_lowres=True)
-        encrypt=pikepdf.Encryption(user=self.usr_pwd, owner=self.own_pwd, allow=permiss)
+        encrypt=pikepdf.Encryption(user=usr_passwd, owner=own_passwd, allow=permiss)
         pdf=pikepdf.Pdf.open(file_path,allow_overwriting_input=True)
         pdf.save(file_path, encryption=encrypt)
         pdf.close()
@@ -217,7 +266,12 @@ class TemplateMake:
             return
 
         if arg == "encrypt":
-            self.encrypt(self.own_pwd)
+            if self.ask_pwd:
+                usr=input("User  password: ")
+                own=input("Owner password: ")
+                self.encrypt(own, usr)
+            else:
+                self.encrypt(self.own_pwd, self.usr_pwd)
             return
 
         if arg == "cleanup":
@@ -250,29 +304,36 @@ class TemplateMake:
         print("help")
         self.runtime("help")
 
+    def save(file):
+        #root=
+        print("save")
+
+    def load():
+        print("load")
 
 ###### MAIN ######
 if __name__ == "__main__":
 
     run=TemplateMake()
 
-    if len(sys.argv) == 1:
-        run.runtime("build")
-        exit()
 
-    if len(sys.argv) == 2 and sys.argv[1] ==  "run":
-        print("Command: ", end="")
-        try:
-            stdin=input()
-        except:
-            exit()
-
-        while stdin != "exit":
-            run.runtime(stdin)
-            print("Next command: ", end="")
-            stdin=input()
-
-        exit()
-
-    for i in range(1, len(sys.argv)):
-        run.runtime(sys.argv[i])
+#    if len(sys.argv) == 1:
+#        run.runtime("build")
+#        exit()
+#
+#    if len(sys.argv) == 2 and sys.argv[1] ==  "run":
+#        print("Command: ", end="")
+#        try:
+#            stdin=input()
+#        except:
+#            exit()
+#
+#        while stdin != "exit":
+#            run.runtime(stdin)
+#            print("Next command: ", end="")
+#            stdin=input()
+#
+#        exit()
+#
+#    for i in range(1, len(sys.argv)):
+#        run.runtime(sys.argv[i])
