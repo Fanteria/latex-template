@@ -70,20 +70,23 @@ class Variables:
 
 class TemplateMake:
 
-    def __init__(self):
-        self.bin_folder="bin/"
-        self.pic_folder="pics/"
-        self.content_folder="content/"
+    def __init__(self,bin_folder="bin/", pic_folder="pics/",
+            content_folder="content/", project_path=os.getcwd()+"/", project_name="projekt",
+            pdf_name="", ask_pwd=False, usr_pwd="", own_pwd="own", vars=Variables()):
+        self.bin_folder=bin_folder
+        self.pic_folder=pic_folder
+        self.content_folder=content_folder
 
-        self.project_path=os.getcwd()+"/"
-        self.project_name="projekt"
-        self.pdf_name=self.project_name+".pdf"
+        self.project_path=project_path
+        self.project_name=project_name
+        if pdf_name == "":
+            self.pdf_name=self.project_name+".pdf"
 
-        self.ask_pwd=False
-        self.usr_pwd=""
-        self.own_pwd="own"
+        self.ask_pwd=ask_pwd
+        self.usr_pwd=usr_pwd
+        self.own_pwd=own_pwd
 
-        self.vars=Variables()
+        self.vars=vars
 
     ###### PRIVATE FUNCTIONS ######
     def __nonbreaking_space(self, text):
