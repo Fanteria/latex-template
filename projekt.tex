@@ -7,6 +7,7 @@
 \usepackage{enumerate}
 \usepackage{gensymb,marvosym}
 \usepackage{times}
+\usepackage{environ}
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
@@ -59,6 +60,34 @@
 
 \ExplSyntaxOff
 
+\newcommand{\insertpicture}[4][]{
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width={#3}]{#2}
+  \caption{#4}
+  \isempty{#1}{}{\label{#1}}
+\end{figure}
+}
+
+\newcommand{\insertgraph}[4][]{
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width={#3}]{#2}
+  \captionof{graf}{#4}
+  \isempty{#1}{}{\label{#1}}
+\end{figure}
+}
+
+\NewEnviron{inserttable}[3][]{
+\begin{centering}
+  \begin{tabular}{#2}
+    \BODY
+  \end{tabular}
+\captionof{table}{#3}
+\isempty{#1}{}{\label{#1}}
+\end{centering}
+}
+
 \usepackage[
   backend=biber,     % defaultní možnost, nastaví unicode a několik dalších vlastností
   style=iso-numeric, % iso-numeric pro číselné uspořádání nebo iso-authoryear pro uspořádání pomocí autorů
@@ -94,7 +123,7 @@
 
 
 % Nastavení cesty k obrázkům
-\graphicspath{pics/}
+\graphicspath{{pics/}}
 
 % Funkce pro vkládání grafů
 \usepackage{float}
@@ -125,7 +154,7 @@
 
 % Vložení stránky se zadáním
 \newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
-\includegraphics{./zadani.pdf}
+\includegraphics{../zadani.pdf}
 \restoregeometry
 \clearpage
 
@@ -167,6 +196,8 @@
 
 
 \input{content/01obsah.tex}
+
+%\value{graf}
 
 % === Zdroje ===
 \clearpage
