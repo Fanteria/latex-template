@@ -1,0 +1,49 @@
+% true pro apnutí false pro vypnutí
+% Titulní strana
+\setboolean{titlepage}{true}
+% Strana se zadáním
+\setboolean{assignment}{false}
+% Čestné prohlášení
+\setboolean{affidavit}{false}
+% Poděkování
+\setboolean{acknowledgments}{false}
+% Obsah
+\setboolean{tableofcontents}{true}
+% Seznam zkratek
+\setboolean{listofabbreviations}{false}
+% Seznam obrázků
+\setboolean{listoffigures}{false}
+% Seznam grafů
+\setboolean{listofgraphs}{false}
+% Seznam tabulek
+\setboolean{listoftables}{false}
+
+% bibliographic source
+\addbibresource{literatura.bib}
+
+% Metadata info
+\hypersetup{
+    pdftitle={Title}
+    pdfauthor={Author}
+    pdfproducer={Producer}
+    pdfsubject={Subject}
+    pdfkeywords={Keywords}
+    pdfcreator = {\LaTeX\ with\ Bib\LaTeX},
+    colorlinks = false,
+    hidelinks
+}
+
+% Nastavení cesty k obrázkům
+\graphicspath{{pics/}}
+
+% === Nastavení proměnných ===
+\newcommand*{\doctitle}{Příliš žluťoučký kůň úpěl ďábelské ódy.}
+\newcommand*{\docauthor}{Autor práce, druhý autor}
+\newcommand*{\supervisor}{Vedoucí} %Vedoucí práce
+\newcommand*{\institution}{Škola}
+\newcommand*{\faculty}{Fakulta}
+\newcommand*{\department}{Obor}
+\newcommand*{\location}{Místo vytvoření}
+\newcommand*{\papertype}{Typ práce}
+\newcommand*{\subject}{Obsah dokumentu}
+\newcommand*{\keywords}{Klíčová slova}

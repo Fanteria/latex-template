@@ -11,6 +11,7 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
+\usepackage{ifthen}
 \usepackage{xparse}
 %\usepackage{pdfpages}
 
@@ -88,12 +89,97 @@
 \end{centering}
 }
 
+% Titulní strana
+\newboolean{titlepage}
+\newcommand{\inserttitlepage}{
+  \ifthenelse{\boolean{titlepage}}{
+    \pagestyle{empty}
+    \include{titulniStrana}
+  }{}
+}
+
+% Strana se zadáním
+\newboolean{assignment}
+\newcommand{\insertassignment}{
+  \ifthenelse{\boolean{assignment}}{
+    \newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+    \includegraphics{../zadani.pdf}
+    \restoregeometry
+    \clearpage
+	}{}
+}
+
+% Čestné prohlášení
+\newboolean{affidavit}
+\newcommand{\insertaffidavit}{
+  \ifthenelse{\boolean{affidavit}}{
+    \include{cestneProhlaseni}
+	}{}
+}
+
+% Poděkování
+\newboolean{acknowledgments}
+\newcommand{\insertacknowledgments}{
+  \ifthenelse{\boolean{acknowledgments}}{
+    \include{podekovani}
+	}{}
+}
+
+% Obsah
+\newboolean{tableofcontents}
+\newcommand{\inserttableofcontents}{
+  \ifthenelse{\boolean{tableofcontents}}{
+  \tableofcontents
+  \newpage
+	}{}
+}
+
+% Seznam zkratek
+\newboolean{listofabbreviations}
+\newcommand{\insertlistofabbreviations}{
+  \ifthenelse{\boolean{listofabbreviations}}{
+  \section*{Seznam zkratek}
+  \input{seznamZkratek}
+  \thispagestyle{empty}
+  \newpage
+	}{}
+}
+
+% Seznam obrázků
+\newboolean{listoffigures}
+\newcommand{\insertlistoffigures}{
+  \ifthenelse{\boolean{listoffigures}}{
+    \listoffigures
+    \thispagestyle{empty}
+    \newpage
+	}{}
+}
+
+% Seznam grafů
+\newboolean{listofgraphs}
+\newcommand{\insertlistofgraphs}{
+  \ifthenelse{\boolean{listofgraphs}}{
+    \listof{graf}{Seznam grafů}
+    \thispagestyle{empty}
+    \newpage
+	}{}
+}
+
+% Seznam tabulek
+\newboolean{listoftables}
+\newcommand{\insertlistoftables}{
+  \ifthenelse{\boolean{listoftables}}{
+    \listoftables
+    \thispagestyle{empty}
+    \newpage
+	}{}
+}
+
+
 \usepackage[
   backend=biber,     % defaultní možnost, nastaví unicode a několik dalších vlastností
   style=iso-numeric, % iso-numeric pro číselné uspořádání nebo iso-authoryear pro uspořádání pomocí autorů
 ]{biblatex}
-
-\addbibresource{literatura.bib}
 
 % Více řádků v jednom pro tabulku
 \usepackage{multirow}
@@ -110,20 +196,6 @@
 
 % Nastavení prolinkování odkazů v dokumentu t metadat dokumentu
 \usepackage{hyperref}
-\hypersetup{
-    pdftitle={Title}
-    pdfauthor={Author}
-    pdfproducer={Producer}
-    pdfsubject={Subject}
-    pdfkeywords={Keywords}
-    pdfcreator = {\LaTeX\ with\ Bib\LaTeX},
-    colorlinks = false,
-    hidelinks
-}
-
-
-% Nastavení cesty k obrázkům
-\graphicspath{{pics/}}
 
 % Funkce pro vkládání grafů
 \usepackage{float}
@@ -134,66 +206,30 @@
 \usepackage{caption}
 \captionsetup[figure]{name=Obr.}
 
-% === Nastavení proměnných ===
-\newcommand*{\doctitle}{Název práce}
-\newcommand*{\docauthor}{Autor práce, druhý autor}
-\newcommand*{\supervisor}{Vedoucí} %Vedoucí práce
-\newcommand*{\institution}{Škola}
-\newcommand*{\faculty}{Fakulta}
-\newcommand*{\department}{Obor}
-\newcommand*{\location}{Místo vytvoření}
-\newcommand*{\papertype}{Typ práce}
-\newcommand*{\subject}{Obsah dokumentu}
-\newcommand*{\keywords}{Klíčová slova}
+\input{"settings.tex"}
 
 % === Začátek dokumentu ===
 \begin{document}
-\pagestyle{empty}
 
-\include{titulniStrana}
-
-% Vložení stránky se zadáním
-\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
-\includegraphics{../zadani.pdf}
-\restoregeometry
-\clearpage
-
-
-\include{cestneProhlaseni}
-
-\include{podekovani}
-
-% === Nastavení obsahů pro dokumenty ===
-% tabulka s obsahem
-\tableofcontents
-
-% seznam zkratek
-% pouze u většího množství zkratek
-%\include{seznamZkratek}
-
-% seznam tabulek
-% pouze pokud jsou použity více jak tři tabulky
-%\newpage
-%\listoftables
-%\thispagestyle{empty}
-
-% seznam obrázků
-% pouze pokud jsou použity více jak tři obrázky
-%\newpage
-%\listoffigures
-%\thispagestyle{empty}
+\inserttitlepage
+\insertassignment
+\insertaffidavit
+\insertacknowledgments
+\inserttableofcontents
+\insertlistofabbreviations
+\insertlistoffigures
+\insertlistofgraphs
+\insertlistoftables
 
 \setcounter{page}{1} %cislo strany
 \thispagestyle{empty}
 
-\newpage
 
 \pagestyle{fancy} %vlastni zahlavi/zapati
 \renewcommand{\headrulewidth}{0.5pt} %bez linky v zahlavi
 \renewcommand{\footrulewidth}{0pt} %linka v zapati
 \lhead{\leftmark}       \chead{} \rhead{} %pole zahlavi (prazdna)
 \lfoot{} \cfoot{} \rfoot{\thepage} %pole zapati
-
 
 \input{content/01obsah.tex}
 
