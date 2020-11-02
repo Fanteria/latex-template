@@ -98,6 +98,15 @@
   }{}
 }
 
+% Abstrakt
+\newboolean{abstract}
+\newcommand{\insertabstract}{
+  \ifthenelse{\boolean{abstract}}{
+    \pagestyle{empty}
+    \include{abstrakt}
+  }{}
+}
+
 % Strana se zadáním
 \newboolean{assignment}
 \newcommand{\insertassignment}{
@@ -212,6 +221,7 @@
 \begin{document}
 
 \inserttitlepage
+\insertabstract
 \insertassignment
 \insertaffidavit
 \insertacknowledgments
