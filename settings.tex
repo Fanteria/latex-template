@@ -1,24 +1,30 @@
 % true pro zapnutí false pro vypnutí
 % Titulní strana
 \setboolean{titlepage}{true}
+\settitlepagefile{titulniStrana}
 % Abstrakt
 \setboolean{abstract}{true}
+\setabstractfile{abstrakt}
 % Strana se zadáním
 \setboolean{assignment}{true}
+\setassignmentfile{zadani.pdf}
 % Čestné prohlášení
-\setboolean{affidavit}{false}
+\setboolean{affidavit}{true}
+\setaffidavitfile{cestneProhlaseni}
 % Poděkování
-\setboolean{acknowledgments}{false}
+\setboolean{acknowledgments}{true}
+\setacknowledgmentsfile{podekovani}
 % Obsah
 \setboolean{tableofcontents}{true}
 % Seznam zkratek
-\setboolean{listofabbreviations}{false}
+\setboolean{listofabbreviations}{true}
+\setlistofabbreviationsfile{seznamZkratek}
 % Seznam obrázků
-\setboolean{listoffigures}{false}
+\setboolean{listoffigures}{true}
 % Seznam grafů
-\setboolean{listofgraphs}{false}
+\setboolean{listofgraphs}{true}
 % Seznam tabulek
-\setboolean{listoftables}{false}
+\setboolean{listoftables}{true}
 
 % bibliographic source
 \addbibresource{literatura.bib}

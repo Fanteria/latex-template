@@ -89,12 +89,42 @@
 \end{centering}
 }
 
+\newcommand{\titlepagevariable}{titulniStrana}
+\newcommand{\settitlepagefile}[1]{
+  \renewcommand{\titlepagevariable}{#1}
+}
+
+\newcommand{\abstractvariable}{abstrakt}
+\newcommand{\setabstractfile}[1]{
+  \renewcommand{\abstractvariable}{#1}
+}
+
+\newcommand{\assignmentvariable}{zadani.pdf}
+\newcommand{\setassignmentfile}[1]{
+  \renewcommand{\assignmentvariable}{#1}
+}
+
+\newcommand{\affidavitvariable}{cestneProhlaseni}
+\newcommand{\setaffidavitfile}[1]{
+  \renewcommand{\affidavitvariable}{#1}
+}
+
+\newcommand{\acknowledgmentsvariable}{podekovani}
+\newcommand{\setacknowledgmentsfile}[1]{
+  \renewcommand{\acknowledgmentsvariable}{#1}
+}
+
+\newcommand{\listofabbreviationsvariable}{seznamZkratek}
+\newcommand{\setlistofabbreviationsfile}[1]{
+  \renewcommand{\listofabbreviationsvariable}{#1}
+}
+
 % Titulní strana
 \newboolean{titlepage}
 \newcommand{\inserttitlepage}{
   \ifthenelse{\boolean{titlepage}}{
     \pagestyle{empty}
-    \include{titulniStrana}
+    \include{\titlepagevariable}
   }{}
 }
 
@@ -103,7 +133,7 @@
 \newcommand{\insertabstract}{
   \ifthenelse{\boolean{abstract}}{
     \pagestyle{empty}
-    \include{abstrakt}
+    \include{\abstractvariable}
   }{}
 }
 
@@ -112,7 +142,7 @@
 \newcommand{\insertassignment}{
   \ifthenelse{\boolean{assignment}}{
     \shorthandoff{-}
-    \includepdf[pages={1-}]{zadani.pdf}
+    \includepdf[pages={1-}]{\assignmentvariable}
     \shorthandon{-}
 	}{}
 }
@@ -121,7 +151,7 @@
 \newboolean{affidavit}
 \newcommand{\insertaffidavit}{
   \ifthenelse{\boolean{affidavit}}{
-    \include{cestneProhlaseni}
+    \include{\affidavitvariable}
 	}{}
 }
 
@@ -129,7 +159,7 @@
 \newboolean{acknowledgments}
 \newcommand{\insertacknowledgments}{
   \ifthenelse{\boolean{acknowledgments}}{
-    \include{podekovani}
+    \include{\acknowledgmentsvariable}
 	}{}
 }
 
@@ -147,7 +177,7 @@
 \newcommand{\insertlistofabbreviations}{
   \ifthenelse{\boolean{listofabbreviations}}{
   \section*{Seznam zkratek}
-  \input{seznamZkratek}
+  \input{\listofabbreviationsvariable}
   \thispagestyle{empty}
   \newpage
 	}{}
