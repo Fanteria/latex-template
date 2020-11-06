@@ -1,7 +1,7 @@
 % true pro zapnutí false pro vypnutí
 % Titulní strana
 \setboolean{titlepage}{true}
-\settitlepagefile{titlepage.tex}
+\settitlepagefile{titlepage}
 % Abstrakt
 \setboolean{abstract}{false}
 \setabstractfile{abstract}
@@ -33,17 +33,18 @@
 \graphicspath{{pics/}}
 
 % === Nastavení proměnných ===
-\renewcommand*{\doctitle}{222Příliš žluťoučký kůň úpěl ďábelské ódy.}
-\renewcommand*{\docauthor}{222Autor práce, druhý autor}
-\renewcommand*{\supervisor}{222Vedoucí} %Vedoucí práce
-\renewcommand*{\institution}{222Škola}
-\renewcommand*{\faculty}{222Fakulta}
-\renewcommand*{\department}{222Obor}
-\renewcommand*{\location}{222Místo vytvoření}
-\renewcommand*{\papertype}{222Typ práce}
-\renewcommand*{\subject}{222Obsah dokumentu}
-\renewcommand*{\keywords}{222Klíčová slova}
+\settitle{Příliš žluťoučký kůň úpěl ďábelské ódy.}
+\setauthor{Autor práce, druhý autor}
+\setsupervisor{Vedoucí}
+\setinstitution{Škola}
+\setfaculty{Fakulta}
+\setdepartment{Obor}
+\setlocation{Místo vytvoření}
+\setpapertype{Typ práce}
+\setsubject{Obsah dokumentu}
+\setkeywords{Klíčová slova}
 
+\setcontentpath{content/}
 % Soubory k tisku
 \addcontentwithnewpagetolist{01obsah.tex}
 \addcontenttolist{02obsah.tex}

@@ -248,7 +248,7 @@
 
 \newcommand*{\doctitle}{}
 \newcommand*{\docauthor}{}
-\newcommand*{\supervisor}{} %Vedoucí práce
+\newcommand*{\supervisor}{}
 \newcommand*{\institution}{}
 \newcommand*{\faculty}{}
 \newcommand*{\department}{}
@@ -256,6 +256,17 @@
 \newcommand*{\papertype}{}
 \newcommand*{\subject}{}
 \newcommand*{\keywords}{}
+
+\newcommand*{\settitle}[1]{\renewcommand*{\doctitle}{#1}}
+\newcommand*{\setauthor}[1]{\renewcommand*{\docauthor}{#1}}
+\newcommand*{\setsupervisor}[1]{\renewcommand*{\supervisor}{#1}}
+\newcommand*{\setinstitution}[1]{\renewcommand*{\institution}{#1}}
+\newcommand*{\setfaculty}[1]{\renewcommand*{\faculty}{#1}}
+\newcommand*{\setdepartment}[1]{\renewcommand*{\department}{#1}}
+\newcommand*{\setlocation}[1]{\renewcommand*{\location}{#1}}
+\newcommand*{\setpapertype}[1]{\renewcommand*{\papertype}{#1}}
+\newcommand*{\setsubject}[1]{\renewcommand*{\subject}{#1}}
+\newcommand*{\setkeywords}[1]{\renewcommand*{\keywords}{#1}}
 
 \newcommand*{\contentpath}{content/}
 \newcommand*{\setcontentpath}[1]{\renewcommand*{\contentpath}{#1}}
