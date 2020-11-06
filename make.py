@@ -7,16 +7,17 @@ import zipfile
 import unicodedata
 import subprocess
 import xml.etree.ElementTree as ET
+import xml.dom.minidom as Dom
 
 class Variables:
 
-    def __init__(self, title="", author="", supervisor="",
+    def __init__(self, doctitle="", docauthor="", supervisor="",
                     institution="", faculty="", department="",
                     location="", papertype="", subject="", keywords=""):
 
         self.vars = {
-            "doctitle": ("pdftitle", title),
-            "docauthor": ("pdfauthor", author),
+            "doctitle": ("pdftitle", doctitle),
+            "docauthor": ("pdfauthor", docauthor),
             "supervisor": ("", supervisor),
             "institution": ("pdfproducer", institution),
             "faculty": ("", faculty),
@@ -47,12 +48,13 @@ class Variables:
     def get_metadata_string(self):
         ret = ""
         list=self.get_metadata_list()
+        ret += "\hypersetup{\n"
         for i in list:
             ret += "\t" + i[0] + "={" + i[1] + "},\n"
 
         ret += "\tpdfcreator = {\LaTeX\ with\ Bib\LaTeX},\n"
         ret += "\tcolorlinks = false,\n"
-        ret += "\thidelinks\n"
+        ret += "\thidelinks\n}\n"
         return ret
 
     def get_commands_list(self):
@@ -67,15 +69,110 @@ class Variables:
             ret+= "\\newcommand*{\\" + i[0] + "}{" + i[1] + "}\n"
         return ret
 
+    def process_line(self, line):
+        command = "\\renewcommand*{"
+        auxfrs = line.find(command)
+        if auxfrs == -1:
+            return
+        auxsec = line[auxfrs:].find("}")
+        commandname = line[auxfrs+len(command):auxsec]
+        auxfrs = line[auxsec:].find("{")
+        auxfrs += auxsec
+        auxsec = line[auxfrs:].find("}")
+        auxsec += auxfrs
+        commandvalue = line[auxfrs+1:auxsec]
+        self.vars[commandname[1:]] = (self.vars[commandname[1:]][0], commandvalue)
+
+class FileSettings:
+
+    def __init__(self, titlepage="titlepage.tex", abstract="abstract.tex",
+                assignment="assignment.pdf", affidavit="affidavit.tex",
+                acknowledgments="acknowledgments.tex",
+                listofabbreviations="listofabbreviations.tex"):
+
+        self.fset = {
+            "titlepage" : ("false", titlepage),
+            "abstract" : ("false", abstract),
+            "assignment" : ("false", assignment),
+            "affidavit" : ("false", affidavit),
+            "acknowledgments" : ("false", acknowledgments),
+            "tableofcontents" : ("true", ""),
+            "listofabbreviations" : ("false", listofabbreviations),
+            "listoffigures" : ("false", ""),
+            "listofgraphs" : ("false", ""),
+            "listoftables" : ("false", "")
+        }
+
+    def get_files_list(self):
+        return { "titlepage" : self.fset["titlepage"][1],
+                 "abstract" : self.fset["abstract"][1],
+                 "assignment" : self.fset["assignment"][1],
+                 "affidavit" : self.fset["affidavit"][1],
+                 "acknowledgments" : self.fset["acknowledgments"][1],
+                 "listofabbreviations" : self.fset["listofabbreviations"][1]}
+
+    def file_list_tostring(self):
+        list = self.get_files_list()
+        ret = ""
+        for i in list:
+            ret += "\set" + i + "file{"
+            ret += self.fset[i][1]
+            ret += "}\n"
+        return ret
+
+    def print_list_tostring(self):
+        ret = ""
+        for i in self.fset:
+            ret += "\setboolean{"
+            ret += i
+            ret += "}{"
+            ret += self.fset[i][0]
+            ret += "}\n"
+        return ret
+
+    def __process_boolean(self, line):
+        command = "\setboolean{"
+        auxfrs = line.find(command)
+        if auxfrs == -1:
+            return
+        auxsec = line[auxfrs:].find("}")
+        commandname = line[auxfrs+len(command):auxsec]
+        auxfrs = line[auxsec:].find("{")
+        auxfrs += auxsec
+        auxsec = line[auxfrs:].find("}")
+        auxsec += auxfrs
+        commandval = line[auxfrs+1:auxsec]
+        self.fset[commandname] = (commandval, self.fset[commandname][1])
+
+    def __process_file(self, line):
+        commandstart = "\set"
+        auxfrs = line.find(commandstart)
+        if auxfrs == -1:
+            return
+        commandend = "file{"
+        auxsec = line[auxfrs+len(commandstart):].find(commandend)
+        if auxsec == -1:
+            return
+        commandname = line[auxfrs+len(commandstart):auxsec+auxfrs+len(commandstart)]
+        auxfrs = auxsec+auxfrs+len(commandstart)+len(commandend)
+        auxsec = line[auxfrs:].find("}")
+        commandval = line[auxfrs:auxsec+auxfrs]
+        self.fset[commandname] = (self.fset[commandname][0], commandval)
+
+    def process_line(self, line):
+        self.__process_boolean(line)
+        self.__process_file(line)
 
 class TemplateMake:
 
     def __init__(self,bin_folder="bin/", pic_folder="pics/",
             content_folder="content/", project_path=os.getcwd()+"/", project_name="projekt",
-            pdf_name="", ask_pwd=False, usr_pwd="", own_pwd="own", vars=Variables()):
+            pdf_name="", ask_pwd=False, usr_pwd="", own_pwd="own", vars=Variables(),
+            filesettings=FileSettings()):
+
         self.bin_folder=bin_folder
-        self.pic_folder=pic_folder
         self.content_folder=content_folder
+        self.pic_folder=pic_folder
 
         self.project_path=project_path
         self.project_name=project_name
@@ -86,6 +183,7 @@ class TemplateMake:
         self.usr_pwd=usr_pwd
         self.own_pwd=own_pwd
 
+        self.filesetting=filesettings
         self.vars=vars
 
     ###### PRIVATE FUNCTIONS ######
@@ -117,6 +215,13 @@ class TemplateMake:
             for f in files:
                 zipClass.write(os.path.join(root, f), os.path.join(root[len(path):], f))
 
+    def __process_line(self, line):
+        command = "\graphicspath{{"
+        auxfrs = line.find(command)
+        if auxfrs == -1:
+            return
+        auxsec = line[auxfrs:].find("}}")
+        self.bin_folder = line[auxfrs+len(command):auxsec]
 
     ###### BUILD FUNCTION ######
     def build(self):
@@ -130,12 +235,18 @@ class TemplateMake:
             os.makedirs(content)
 
         shutil.copy(self.project_path+self.project_name+".tex",bin+self.project_name+".tex")
-        shutil.copy(self.project_path+"literatura.bib",bin+"literatura.bib")
-        shutil.copy(self.project_path+"zadani.pdf",bin+"zadani.pdf")
+        shutil.copy(self.project_path+"references.bib",bin+"references.bib")
+        shutil.copy(self.project_path+"assignment.pdf",bin+"assignment.pdf")
 
-        self.__texfile_process("cestneProhlaseni.tex", self.project_path, bin)
-        self.__texfile_process("titulniStrana.tex", self.project_path, bin)
-        self.__texfile_process("podekovani.tex", self.project_path, bin)
+        self.__texfile_process("affidavit.tex", self.project_path, bin)
+        self.__texfile_process("listofabbreviations.tex", self.project_path, bin)
+        self.__texfile_process("titlepage.tex", self.project_path, bin)
+        self.__texfile_process("acknowledgments.tex", self.project_path, bin)
+        self.__texfile_process("affidavit.tex", self.project_path, bin)
+        self.__texfile_process("settings.tex", self.project_path, bin)
+
+        if not os.path.islink(bin+"pics"):
+            os.symlink(self.project_path+"pics", bin+"pics")
 
         for i in os.listdir(sourceContent):
             if i.endswith(".tex"):
@@ -285,6 +396,10 @@ class TemplateMake:
             self.help()
             return
 
+        if arg == "print_settings":
+            print(self.__get_settings())
+            return
+
         if arg == "test":
             self.test()
             return
@@ -307,17 +422,60 @@ class TemplateMake:
         print("help")
         self.runtime("help")
 
-    def save(file):
-        #root=
-        print("save")
+    def __get_settings(self):
+        str  = self.filesetting.file_list_tostring()
+        str += "\n"
+        str += self.filesetting.print_list_tostring()
+        str += "\n\graphicspath{{"
+        str += self.pic_folder
+        str += "}}\n"
+        str += "\n"
+        str += self.vars.get_commands_string()
+        return str
 
-    def load():
-        print("load")
+    def save(self, file):
+        if not os.path.exists(file):
+            print("File not found")
+            return
+
+            str = self.__get_settings()
+
+        try:
+            f = open(file, "w+")
+            f.write(str)
+            f.close()
+        except:
+            print("Something went wrong while writing the file.")
+
+    def load(self, file):
+        if not os.path.exists(file):
+            print("File not found")
+            return
+
+        try:
+            f = open(file, "r")
+            lines = f.readlines()
+
+            for line in lines:
+                line = line.strip()
+                line = re.sub(r'(?m)^ *%.*\n?', '', line)
+                if line != "":
+                    self.__process_line(line)
+                    self.vars.process_line(line)
+                    self.filesetting.process_line(line)
+            f.close()
+        except:
+            print("Something goes wrong while reading the file.")
+
 
 ###### MAIN ######
 if __name__ == "__main__":
 
-    run=TemplateMake()
+    var = Variables(doctitle="Title")
+    run = TemplateMake(vars=var)
+
+    run.load("asdsettings.tex")
+    run.save("asdf")
 
 
 #    if len(sys.argv) == 1:
