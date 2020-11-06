@@ -14,6 +14,8 @@
 \usepackage{ifthen}
 \usepackage{xparse}
 \usepackage{pdfpages}
+\usepackage{etoolbox} % for create lists
+
 
 \ExplSyntaxOn
 
@@ -255,6 +257,23 @@
 \newcommand*{\subject}{}
 \newcommand*{\keywords}{}
 
+\newcommand*{\contentpath}{content/}
+\newcommand*{\setcontentpath}[1]{\renewcommand*{\contentpath}{#1}}
+
+\newcommand*{\addcontenttolist}[1]{
+  \listadd{\languagelist}{
+    \input{\contentpath#1}
+
+  }
+}
+
+\newcommand*{\addcontentwithnewpagetolist}[1]{
+  \listadd{\languagelist}{
+    \input{\contentpath#1}
+    \newpage
+
+  }
+}
 
 \setboolean{titlepage}{false}
 \setboolean{abstract}{false}
@@ -268,6 +287,18 @@
 \setboolean{listoftables}{false}
 
 \input{"settings.tex"}
+
+\hypersetup{
+    pdftitle={\doctitle},
+    pdfauthor={\docauthor},
+    pdfproducer={\institution},
+    pdfsubject={\subject},
+    pdfkeywords={\keywords},
+    pdfcreator = {\LaTeX\ with\ Bib\LaTeX},
+    colorlinks = false,
+    hidelinks
+}
+
 
 % === Začátek dokumentu ===
 \begin{document}
@@ -293,9 +324,7 @@
 \lhead{\leftmark}       \chead{} \rhead{} %pole zahlavi (prazdna)
 \lfoot{} \cfoot{} \rfoot{\thepage} %pole zapati
 
-\input{content/01obsah.tex}
-
-%\value{graffigures}
+\dolistloop\languagelist
 
 % === Zdroje ===
 \clearpage
