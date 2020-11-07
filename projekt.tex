@@ -235,7 +235,10 @@
 \usepackage{setspace} \onehalfspacing
 
 % Nastavení prolinkování odkazů v dokumentu t metadat dokumentu
-\usepackage{hyperref}
+\usepackage[
+  pdfencoding=auto,
+  psdextra,
+]{hyperref}
 
 % Funkce pro vkládání grafů
 \usepackage{float}
@@ -280,8 +283,8 @@
 
 \newcommand*{\addcontentwithnewpagetolist}[1]{
   \listadd{\languagelist}{
-    \input{\contentpath#1}
     \newpage
+    \input{\contentpath#1}
 
   }
 }

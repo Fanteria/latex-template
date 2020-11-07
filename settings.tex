@@ -1,38 +1,23 @@
-% true pro zapnutí false pro vypnutí
-% Titulní strana
-\setboolean{titlepage}{true}
 \settitlepagefile{titlepage}
-% Abstrakt
-\setboolean{abstract}{false}
 \setabstractfile{abstract}
-% Strana se zadáním
-\setboolean{assignment}{false}
 \setassignmentfile{assignment.pdf}
-% Čestné prohlášení
-\setboolean{affidavit}{false}
 \setaffidavitfile{affidavit}
-% Poděkování
-\setboolean{acknowledgments}{false}
 \setacknowledgmentsfile{acknowledgments}
-% Obsah
-\setboolean{tableofcontents}{false}
-% Seznam zkratek
-\setboolean{listofabbreviations}{false}
 \setlistofabbreviationsfile{listofabbreviations}
-% Seznam obrázků
+
+\setboolean{titlepage}{true}
+\setboolean{abstract}{false}
+\setboolean{assignment}{false}
+\setboolean{affidavit}{false}
+\setboolean{acknowledgments}{false}
+\setboolean{tableofcontents}{false}
+\setboolean{listofabbreviations}{false}
 \setboolean{listoffigures}{false}
-% Seznam grafů
 \setboolean{listofgraphs}{false}
-% Seznam tabulek
 \setboolean{listoftables}{false}
 
-% bibliographic source
-\addbibresource{references.bib}
-
-% Nastavení cesty k obrázkům
 \graphicspath{{pics/}}
 
-% === Nastavení proměnných ===
 \settitle{Příliš žluťoučký kůň úpěl ďábelské ódy.}
 \setauthor{Autor práce, druhý autor}
 \setsupervisor{Vedoucí}
@@ -45,8 +30,7 @@
 \setkeywords{Klíčová slova}
 
 \setcontentpath{content/}
-% Soubory k tisku
-\addcontentwithnewpagetolist{01obsah.tex}
-\addcontenttolist{02obsah.tex}
+
+\addcontenttolist{01obsah.tex}
+\addcontentwithnewpagetolist{02obsah.tex}
 \addcontentwithnewpagetolist{03obsah.tex}
-\addcontenttolist{03obsah.tex}
