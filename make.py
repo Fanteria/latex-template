@@ -465,7 +465,10 @@ class TemplateMake:
 
     def runtime(self, arg, atr=""):
         if arg == "build":
-            self.build()
+            if atr == "":
+                self.build()
+            else:
+                self.build(atr)
             return
 
         if arg == "clean":
@@ -514,7 +517,6 @@ class TemplateMake:
             return
 
         print("Command " + arg + " does not exist.")
-
 
     def test(self):
         print("build")
@@ -604,5 +606,10 @@ if __name__ == "__main__":
 
         exit()
 
-    for i in range(1, len(sys.argv)):
-        run.build(sys.argv[i])
+    for i in range(1, len(sys.argv)-1):
+        if not run.is_runtime(sys.argv[i]):
+            continue
+        run.runtime(sys.argv[i], sys.argv[i+1])
+
+    if run.is_runtime(sys.argv[len(sys.argv)-1]):
+        run.runtime(sys.argv[len(sys.argv)-1])
