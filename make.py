@@ -329,6 +329,7 @@ class TemplateMake:
         self.__move_to_bin(".toc")
         self.__move_to_bin(".run.xml")
 
+
     ###### BUILD FUNCTION ######
     def build(self, content_options="-"):
         if not os.path.exists(self.bin_folder):
@@ -386,16 +387,18 @@ class TemplateMake:
     def pack(self):
         zip = zipfile.ZipFile(self.project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
 
-        zip.write(self.project_path+"LICENSE","./"+"LICENSE")
-        zip.write(self.project_path+"README.md","./"+"README.md")
+        zip.write(self.project_name+".tex","./"+self.project_name+".tex")
 
-        zip.write(self.project_path+self.project_name+".tex","./"+self.project_name+".tex")
-        zip.write(self.project_path+"literatura.bib","./"+"literatura.bib")
-        zip.write(self.project_path+"zadani.pdf","./"+"zadani.pdf")
+        files = self.filesetting.get_files_list()
+        for i in files:
+            if "." not in files[i]:
+                name = os.path.basename(files[i])
+                zip.write(files[i]+".tex","./"+name+".tex")
+            else:
+                name = os.path.basename(files[i])
+                zip.write(files[i],"./"+name)
 
-        zip.write(self.project_path+"cestneProhlaseni.tex","./"+"cestneProhlaseni.tex")
-        zip.write(self.project_path+"titulniStrana.tex","./"+"titulniStrana.tex")
-        zip.write(self.project_path+"podekovani.tex","./"+"podekovani.tex")
+        zip.write("references.bib","./"+"references.bib")
 
         self.__zip_folder(self.project_path, self.content_folder, zip)
         self.__zip_folder(self.project_path, self.pic_folder, zip)
@@ -403,7 +406,7 @@ class TemplateMake:
         zip.close()
 
     def encrypt(self, own_passwd, usr_passwd):
-        file_path=self.project_path+self.pdf_name
+        file_path=os.path.join(self.project_path, self.pdf_name)
         if not os.path.exists(file_path):
             print("Pdf for encryption does not exist.")
 
