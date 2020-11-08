@@ -294,14 +294,15 @@ class TemplateMake:
                     secpage = fstpage
                 fstpage = 0
                 continue
-
-        if max(pages) > len:
-            return []
+        if not pages or max(pages) > len:
+            return ([], [])
         return (pages, newpg)
 
     def __process_content(self, option):
         files = os.listdir(self.content_folder)
         pages = self.__get_list_of_file_numbers(option, len(os.listdir(self.content_folder)))
+        if not pages[0]:
+            return False
         str = "\n"
         for i in range(0, len(pages[0])):
             if pages[1][i]:
@@ -315,6 +316,7 @@ class TemplateMake:
         f = open(self.settings, "a")
         f.write(str)
         f.close()
+        return True
 
     def __move_to_bin(self, suffix):
         files = os.listdir(self.project_path)
@@ -346,7 +348,9 @@ class TemplateMake:
         bibcmd = " biber " + self.project_name + ".bcf"
 
         self.save(self.settings)
-        self.__process_content(content_options)
+        if not self.__process_content(content_options):
+            print("Wrong content files sequence.")
+            return
 
         try:
             self.frsOut = subprocess.check_output(pdfcmd , shell=True)
