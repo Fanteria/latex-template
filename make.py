@@ -177,6 +177,8 @@ class TemplateMake:
 
         self.settings="settings.tex"
 
+        self.references="references.bib"
+
         self.pic_folder=pic_folder
         self.pic_folder_abs=os.path.abspath(pic_folder)
 
@@ -241,6 +243,11 @@ class TemplateMake:
         if auxfrs != -1:
             auxsec = line[auxfrs:].find("}")
             self.content_folder = line[auxfrs+len(command):auxsec]
+        command = "\\addbibresource{"
+        auxfrs = line.find(command)
+        if auxfrs != -1:
+            auxsec = line[auxfrs:].find("}")
+            self.references = line[auxfrs+len(command):auxsec]
 
     def __get_list_of_file_numbers(self, option, len):
         newpg = []
@@ -398,7 +405,7 @@ class TemplateMake:
                 name = os.path.basename(files[i])
                 zip.write(files[i],"./"+name)
 
-        zip.write("references.bib","./"+"references.bib")
+        zip.write(self.references,"./"+self.references)
 
         self.__zip_folder(self.project_path, self.content_folder, zip)
         self.__zip_folder(self.project_path, self.pic_folder, zip)
@@ -541,6 +548,9 @@ class TemplateMake:
         str = self.filesetting.file_list_tostring()
         str += "\n"
         str += self.filesetting.print_list_tostring()
+        str += "\n\\addbibresource{"
+        str += self.references
+        str += "}\n"
         str += "\n\graphicspath{{"
         str += self.pic_folder
         str += "}}\n"
