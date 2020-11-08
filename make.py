@@ -369,7 +369,7 @@ class TemplateMake:
     def clear(self):
         self.clean()
 
-        file_path=self.project_path+self.pdf_name
+        file_path=os.path.join(self.project_path, self.pdf_name)
         if os.path.exists(file_path):
             try:
                 os.remove(file_path)
