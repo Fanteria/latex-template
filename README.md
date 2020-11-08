@@ -10,3 +10,4 @@ print(self.__get_list_of_file_numbers("-8, 5-9,n10,13, n17-", 20))
 5. `\setcontentpath` must be usable without drop build
 6. path join use in python
 7. Make it project undepedent on location.
+8. Add references to program settings
