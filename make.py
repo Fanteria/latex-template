@@ -310,13 +310,14 @@ class TemplateMake:
         f.close()
 
     def __move_to_bin(self, suffix):
-        src = self.project_name + suffix
-        dest = self.bin_folder + self.project_name + suffix
-        if not os.path.exists(src):
-            return
-        if os.path.exists(dest):
-            os.remove(dest)
-        shutil.move(src, dest)
+        files = os.listdir(self.project_path)
+        for f in files:
+            if f.endswith(suffix):
+                src = os.path.join(self.project_path, f)
+                dest = os.path.join(self.bin_folder, f)
+                if os.path.exists(dest):
+                    os.remove(dest)
+                shutil.move(src, dest)
 
     def __move_all_to_bin(self):
         self.__move_to_bin(".aux")
@@ -330,9 +331,8 @@ class TemplateMake:
 
     ###### BUILD FUNCTION ######
     def build(self, content_options="-"):
-        bin=self.project_path+self.bin_folder
-        if not os.path.exists(bin):
-            os.makedirs(bin)
+        if not os.path.exists(self.bin_folder):
+            os.makedirs(self.bin_folder)
 
         pdfcmd = " pdflatex -interaction=nonstopmode " + self.project_name + ".tex"
         bibcmd = " biber " + self.project_name + ".bcf"
@@ -364,8 +364,7 @@ class TemplateMake:
         self.__move_all_to_bin()
 
     def clean(self):
-        bin=self.project_path+self.bin_folder
-        shutil.rmtree(bin,ignore_errors=True)
+        shutil.rmtree(self.bin_folder,ignore_errors=True)
 
     def clear(self):
         self.clean()
@@ -448,8 +447,23 @@ class TemplateMake:
 
 
     ###### RUNTIME ######
-    def runtime(self, arg):
+    def is_runtime(self, arg):
+        if (arg == "build" or
+            arg == "clean" or
+            arg == "clear" or
+            arg == "pack" or
+            arg == "encrypt" or
+            arg == "cleanup" or
+            arg == "help" or
+            arg == "print_settings" or
+            arg == "save" or
+            arg == "load" or
+            arg == "run" or
+            arg == "test"):
+            return True
+        return False
 
+    def runtime(self, arg, atr=""):
         if arg == "build":
             self.build()
             return
@@ -500,6 +514,7 @@ class TemplateMake:
             return
 
         print("Command " + arg + " does not exist.")
+
 
     def test(self):
         print("build")
@@ -567,25 +582,27 @@ if __name__ == "__main__":
 
     run = TemplateMake()
 
-    run.build_new("1,n2,n3")
+    if len(sys.argv) == 1:
+        run.build()
+        exit()
 
-#    if len(sys.argv) == 1:
-#        run.runtime("build")
-#        exit()
-#
-#    if len(sys.argv) == 2 and sys.argv[1] ==  "run":
-#        print("Command: ", end="")
-#        try:
-#            stdin=input()
-#        except:
-#            exit()
-#
-#        while stdin != "exit":
-#            run.runtime(stdin)
-#            print("Next command: ", end="")
-#            stdin=input()
-#
-#        exit()
-#
-#    for i in range(1, len(sys.argv)):
-#        run.runtime(sys.argv[i])
+    if len(sys.argv) == 2 and not run.is_runtime(sys.argv[1]):
+        run.build(sys.argv[1])
+        exit()
+
+    if len(sys.argv) == 2 and sys.argv[1] == "run":
+        print("Command: ", end="")
+        try:
+            stdin=input()
+        except:
+            exit()
+
+        while stdin != "exit":
+            run.runtime(stdin)
+            print("Next command: ", end="")
+            stdin=input()
+
+        exit()
+
+    for i in range(1, len(sys.argv)):
+        run.build(sys.argv[i])
