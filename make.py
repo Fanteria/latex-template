@@ -353,6 +353,30 @@ class TemplateMake:
         self.__move_suffix_to_bin(".run.xml")
         self.__move_content_waved_to_bin()
 
+    def __referencces_check(self):
+        if not os.path.exists(self.references):
+            return True
+
+        ret = True
+
+        with open(self.references, "r") as f:
+            lines = f.readlines()
+
+        f = open(self.references, "w")
+        for i in range(len(lines)):
+            if re.search("@*{,", lines[i]):
+                ret = False
+                print("References: On line " + str(i + 1) + " missing citations key.")
+
+            if lines[i][:7] == "url = {":
+                lines[i] = lines[i].replace("{\_}","_")
+
+
+            f.write(lines[i])
+
+        f.close()
+
+        return ret
 
     ###### BUILD FUNCTION ######
     def build(self, content_options="-"):
@@ -362,31 +386,35 @@ class TemplateMake:
         pdfcmd = " pdflatex -interaction=nonstopmode " + self.project_name + ".tex"
         bibcmd = " biber " + self.project_name + ".bcf"
 
+        if not self.__referencces_check():
+            print("Please fix it.")
+            return
+
         self.save(self.settings)
         if not self.__process_content(content_options):
             print("Wrong content files sequence.")
             return
 
-        try:
-            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
-        except:
-            print("Something in first compilation.tex files is wrong. Exception:", sys.exc_info()[0])
-            self.__move_all_to_bin()
-            return
-
-        try:
-            self.bibOut = subprocess.check_output(bibcmd , shell=True)
-        except:
-            print("Something in bibliography files is wrong. Exception:", sys.exc_info()[0])
-            self.__move_all_to_bin()
-            return
-
-        try:
-            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
-        except:
-            print("Something in second compilation.tex files is wrong. Exception:", sys.exc_info()[0])
-            self.__move_all_to_bin()
-            return
+#        try:
+#            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
+#        except:
+#            print("Something in first compilation.tex files is wrong. Exception:", sys.exc_info()[0])
+#            self.__move_all_to_bin()
+#            return
+#
+#        try:
+#            self.bibOut = subprocess.check_output(bibcmd , shell=True)
+#        except:
+#            print("Something in bibliography files is wrong. Exception:", sys.exc_info()[0])
+#            self.__move_all_to_bin()
+#            return
+#
+#        try:
+#            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
+#        except:
+#            print("Something in second compilation.tex files is wrong. Exception:", sys.exc_info()[0])
+#            self.__move_all_to_bin()
+#            return
 
         self.__move_all_to_bin()
 
