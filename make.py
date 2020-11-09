@@ -395,26 +395,26 @@ class TemplateMake:
             print("Wrong content files sequence.")
             return
 
-#        try:
-#            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
-#        except:
-#            print("Something in first compilation.tex files is wrong. Exception:", sys.exc_info()[0])
-#            self.__move_all_to_bin()
-#            return
-#
-#        try:
-#            self.bibOut = subprocess.check_output(bibcmd , shell=True)
-#        except:
-#            print("Something in bibliography files is wrong. Exception:", sys.exc_info()[0])
-#            self.__move_all_to_bin()
-#            return
-#
-#        try:
-#            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
-#        except:
-#            print("Something in second compilation.tex files is wrong. Exception:", sys.exc_info()[0])
-#            self.__move_all_to_bin()
-#            return
+        try:
+            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
+        except:
+            print("Something in first compilation.tex files is wrong. Exception:", sys.exc_info()[0])
+            self.__move_all_to_bin()
+            return
+
+        try:
+            self.bibOut = subprocess.check_output(bibcmd , shell=True)
+        except:
+            print("Something in bibliography files is wrong. Exception:", sys.exc_info()[0])
+            self.__move_all_to_bin()
+            return
+
+        try:
+            self.frsOut = subprocess.check_output(pdfcmd , shell=True)
+        except:
+            print("Something in second compilation.tex files is wrong. Exception:", sys.exc_info()[0])
+            self.__move_all_to_bin()
+            return
 
         self.__move_all_to_bin()
 
