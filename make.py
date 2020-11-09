@@ -521,6 +521,10 @@ class TemplateMake:
         return False
 
     def runtime(self, arg, atr=""):
+        if arg == "init":
+            self.save("settings.tex")
+            return
+
         if arg == "build":
             if atr == "":
                 self.build()
