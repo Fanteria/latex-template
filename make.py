@@ -216,14 +216,17 @@ class TemplateMake:
     def __printLog(self, log):
         print(log.decode("utf-8"))
 
-    def __texfile_process(self, fname, source, dest):
-        f = open(source+fname, "r")
+    def __texfile_process(self, fname, source):
+        f = open(os.path.join(source, fname), "r")
         text = self.__nonbreaking_space(f.read())
         f.close()
 
-        o = open(dest+fname, "w")
+        filename = "waved"+fname
+        o = open(os.path.join(source, filename), "w")
         o.write(text)
         o.close()
+
+        return filename
 
     def __zip_folder(self, path, folder, zipClass):
         # Find it all recursively
@@ -305,20 +308,21 @@ class TemplateMake:
             return False
         str = "\n"
         for i in range(0, len(pages[0])):
+            filename = self.__texfile_process(files[pages[0][i]-1], self.content_folder)
             if pages[1][i]:
                 str += "\\addcontentwithnewpagetolist{"
-                str += files[pages[0][i]-1]
+                str += filename
                 str += "}\n"
             else:
                 str += "\\addcontenttolist{"
-                str += files[pages[0][i]-1]
+                str += filename
                 str += "}\n"
         f = open(self.settings, "a")
         f.write(str)
         f.close()
         return True
 
-    def __move_to_bin(self, suffix):
+    def __move_suffix_to_bin(self, suffix):
         files = os.listdir(self.project_path)
         for f in files:
             if f.endswith(suffix):
@@ -328,15 +332,26 @@ class TemplateMake:
                     os.remove(dest)
                 shutil.move(src, dest)
 
+    def __move_content_waved_to_bin(self):
+        files = os.listdir(self.content_folder)
+        for f in files:
+            if f[:5] == "waved":
+                src = os.path.join(self.content_folder, f)
+                dest = os.path.join(self.bin_folder, f)
+                if os.path.exists(dest):
+                    os.remove(dest)
+                shutil.move(src, dest)
+
     def __move_all_to_bin(self):
-        self.__move_to_bin(".aux")
-        self.__move_to_bin(".bbl")
-        self.__move_to_bin(".bcf")
-        self.__move_to_bin(".blg")
-        self.__move_to_bin(".log")
-        self.__move_to_bin(".out")
-        self.__move_to_bin(".toc")
-        self.__move_to_bin(".run.xml")
+        self.__move_suffix_to_bin(".aux")
+        self.__move_suffix_to_bin(".bbl")
+        self.__move_suffix_to_bin(".bcf")
+        self.__move_suffix_to_bin(".blg")
+        self.__move_suffix_to_bin(".log")
+        self.__move_suffix_to_bin(".out")
+        self.__move_suffix_to_bin(".toc")
+        self.__move_suffix_to_bin(".run.xml")
+        self.__move_content_waved_to_bin()
 
 
     ###### BUILD FUNCTION ######
