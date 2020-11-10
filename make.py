@@ -179,6 +179,8 @@ class TemplateMake:
 
         self.references="references.bib"
 
+        self.main=project_name + ".tex"
+
         self.pic_folder=pic_folder
         self.pic_folder_abs=os.path.abspath(pic_folder)
 
@@ -302,13 +304,13 @@ class TemplateMake:
         return (pages, newpg)
 
     def __process_content(self, option):
-        files = os.listdir(self.content_folder)
-        pages = self.__get_list_of_file_numbers(option, len(os.listdir(self.content_folder)))
+        files = os.listdir(os.path.join(self.project_path, self.content_folder))
+        pages = self.__get_list_of_file_numbers(option, len(files))
         if not pages[0]:
             return False
         str = "\n"
         for i in range(0, len(pages[0])):
-            filename = self.__texfile_process(files[pages[0][i]-1], self.content_folder)
+            filename = self.__texfile_process(files[pages[0][i]-1], os.path.join(self.project_path, self.content_folder))
             if pages[1][i]:
                 str += "\\addcontentwithnewpagetolist{"
                 str += filename
@@ -383,17 +385,29 @@ class TemplateMake:
         if not os.path.exists(self.bin_folder):
             os.makedirs(self.bin_folder)
 
-        pdfcmd = " pdflatex -interaction=nonstopmode " + self.project_name + ".tex"
+        #print(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.main))
+
+        pdfcmd = " pdflatex -interaction=nonstopmode " + os.path.join(os.path.dirname(os.path.realpath(__file__)), self.main)
         bibcmd = " biber " + self.project_name + ".bcf"
 
         if not self.__referencces_check():
             print("Please fix it.")
             return
 
+        if os.path.exists(self.settings):
+            os.remove(self.settings)
+
         self.save(self.settings)
         if not self.__process_content(content_options):
             print("Wrong content files sequence.")
             return
+
+        dest = os.path.dirname(os.path.realpath(__file__))
+        if dest != self.project_path:
+            dest = os.path.join(dest, self.settings)
+            if os.path.exists(dest):
+                os.remove(dest)
+            os.symlink(os.path.join(self.project_path, self.settings), dest)
 
         try:
             self.frsOut = subprocess.check_output(pdfcmd , shell=True)
@@ -516,12 +530,15 @@ class TemplateMake:
             arg == "save" or
             arg == "load" or
             arg == "run" or
+            arg == "init" or
             arg == "test"):
             return True
         return False
 
     def runtime(self, arg, atr=""):
         if arg == "init":
+            if not os.path.exists(self.content_folder):
+                os.makedirs(self.content_folder)
             self.save("settings.tex")
             return
 

@@ -126,7 +126,8 @@
 \newcommand{\inserttitlepage}{
   \ifthenelse{\boolean{titlepage}}{
     \pagestyle{empty}
-    \include{\titlepagevariable}
+    \input{\titlepagevariable}
+    \newpage
   }{}
 }
 
@@ -135,7 +136,8 @@
 \newcommand{\insertabstract}{
   \ifthenelse{\boolean{abstract}}{
     \pagestyle{empty}
-    \include{\abstractvariable}
+    \input{\abstractvariable}
+    \newpage
   }{}
 }
 
@@ -153,7 +155,8 @@
 \newboolean{affidavit}
 \newcommand{\insertaffidavit}{
   \ifthenelse{\boolean{affidavit}}{
-    \include{\affidavitvariable}
+    \input{\affidavitvariable}
+    \newpage
 	}{}
 }
 
@@ -161,7 +164,8 @@
 \newboolean{acknowledgments}
 \newcommand{\insertacknowledgments}{
   \ifthenelse{\boolean{acknowledgments}}{
-    \include{\acknowledgmentsvariable}
+    \input{\acknowledgmentsvariable}
+    \newpage
 	}{}
 }
 
