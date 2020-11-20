@@ -452,6 +452,31 @@ class TemplateMake:
             except OSError as e:
                 print("Error: %s : %s" % (file_path, e.strerror))
 
+    def only_base(self):
+        self.clear()
+
+        try:
+            if os.path.exists("references.bib"):
+                os.remove("references.bib")
+            if os.path.exists("abstract.tex"):
+                os.remove("abstract.tex")
+            if os.path.exists("acknowledgments.tex"):
+                os.remove("acknowledgments.tex")
+            if os.path.exists("titlepage.tex"):
+                os.remove("titlepage.tex")
+            if os.path.exists("affidavit.tex"):
+                os.remove("affidavit.tex")
+            if os.path.exists("assignment.pdf"):
+                os.remove("assignment.pdf")
+            if os.path.exists("listofabbreviations.tex"):
+                os.remove("listofabbreviations.tex")
+            if os.path.exists("settings.tex"):
+                os.remove("settings.tex")
+
+        except OSError as e:
+            print("Error: %s : %s" % (e.strerror))
+
+
     def pack(self):
         zip = zipfile.ZipFile(self.project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
 
@@ -531,6 +556,7 @@ class TemplateMake:
             arg == "load" or
             arg == "run" or
             arg == "init" or
+            arg == "onlyBase" or
             arg == "test"):
             return True
         return False
@@ -555,6 +581,10 @@ class TemplateMake:
 
         if arg == "clear":
             self.clear()
+            return
+
+        if arg == "onlyBase":
+            self.only_base()
             return
 
         if arg == "pack":
