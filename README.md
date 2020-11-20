@@ -10,3 +10,4 @@ print(self.__get_list_of_file_numbers("-8, 5-9,n10,13, n17-", 20))
 3. Reader for pdflatex output.
 4. Aomments stay in settings.
 5. Add some usefull info to comments in settings.
+6. Add silent option.
