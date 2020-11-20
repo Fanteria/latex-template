@@ -472,10 +472,11 @@ class TemplateMake:
                 os.remove("listofabbreviations.tex")
             if os.path.exists("settings.tex"):
                 os.remove("settings.tex")
+            shutil.rmtree("content",ignore_errors=True)
+            shutil.rmtree("pics",ignore_errors=True)
 
         except OSError as e:
             print("Error: %s : %s" % (e.strerror))
-
 
     def pack(self):
         zip = zipfile.ZipFile(self.project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
