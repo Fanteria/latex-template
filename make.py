@@ -304,7 +304,7 @@ class TemplateMake:
         return (pages, newpg)
 
     def __process_content(self, option):
-        files = os.listdir(os.path.join(self.project_path, self.content_folder))
+        files = sorted(os.listdir(os.path.join(self.project_path, self.content_folder)))
         pages = self.__get_list_of_file_numbers(option, len(files))
         if not pages[0]:
             return False
