@@ -16,6 +16,13 @@
 \usepackage{pdfpages}
 \usepackage{etoolbox} % for create lists
 
+%\usepackage{savesym}
+%\savesymbol{addspace}
+%\usepackage{musixtex}
+%\restoresymbol{TXF}{addspace}
+\usepackage{musixtex} %For music notation, can be removed
+\let\mxaddspace\addspace\let\addspace\relax
+%\let\mxaddspace\addspace\let\addspace\relax
 
 \ExplSyntaxOn
 
