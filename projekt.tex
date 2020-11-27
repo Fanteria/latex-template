@@ -15,7 +15,8 @@
 \usepackage{xparse}
 \usepackage{pdfpages}
 \usepackage{etoolbox} % for create lists
-
+%\usepackage[toc,page,title,titletoc]{appendix}
+\usepackage[title,titletoc]{appendix}
 \usepackage{musixtex} %For music notation, can be removed
 \let\mxaddspace\addspace\let\addspace\relax
 
@@ -64,6 +65,36 @@
 }
 
 \ExplSyntaxOff
+
+\renewcommand{\appendixtocname}{Seznam příloh}
+\renewcommand{\appendixpagename}{Seznam příloh}
+\renewcommand{\appendixname}{Seznam příloh}
+\makeatletter
+\let\oriAlph\Alph
+\let\orialph\alph
+\renewcommand{\@resets@pp}{\par
+  \@ppsavesec
+  \stepcounter{@pps}
+  \setcounter{section}{0}%
+  \if@chapter@pp
+    \setcounter{chapter}{0}%
+    \renewcommand\@chapapp{\appendixname}%
+    \renewcommand\thechapter{\@Alph\c@chapter}%
+  \else
+    \setcounter{subsection}{0}%
+    \renewcommand\thesection{\@Alph\c@section}%
+  \fi
+  \if@pphyper
+    \if@chapter@pp
+      \renewcommand{\theHchapter}{\theH@pps.\oriAlph{chapter}}%
+    \else
+      \renewcommand{\theHsection}{\theH@pps.\oriAlph{section}}%
+    \fi
+    \def\Hy@chapapp{appendix}%
+  \fi
+  \restoreapp
+}
+\makeatother
 
 \newcommand{\insertpicture}[4][]{
 \begin{figure}[htbp]
@@ -122,6 +153,12 @@
 \newcommand{\setlistofabbreviationsfile}[1]{
   \renewcommand{\listofabbreviationsvariable}{#1}
 }
+
+\newcommand{\appendiceslistvariable}{seznamPriloh}
+\newcommand{\setappendiceslistfile}[1]{
+  \renewcommand{\appendiceslistvariable}{#1}
+}
+
 
 % Titulní strana
 \newboolean{titlepage}
@@ -221,6 +258,19 @@
 	}{}
 }
 
+% Přílohy
+\newboolean{appendiceslist}
+\newcommand{\insertappendiceslist}{
+  \ifthenelse{\boolean{appendiceslist}}{
+    \clearpage
+    \begin{appendices}
+      %\renewcommand{\thesection}{\arabic{section}.}
+
+      \input{\appendiceslistvariable}
+
+    \end{appendices}
+	}{}
+}
 
 \usepackage[
   backend=biber,     % defaultní možnost, nastaví unicode a několik dalších vlastností
@@ -305,6 +355,7 @@
 \setboolean{listoffigures}{false}
 \setboolean{listofgraphs}{false}
 \setboolean{listoftables}{false}
+\setboolean{appendiceslist}{false}
 
 \input{"settings.tex"}
 
@@ -354,5 +405,15 @@
 \renewcommand{\refname}{Seznam použitých zdrojů}
 
 \printbibliography
+
+\insertappendiceslist
+%\begin{appendices}
+%%\renewcommand{\thesection}{\arabic{section}.}
+%
+%\section{První příloha}
+%\pagebreak
+%\section{Druhá příloha}
+%
+%\end{appendices}
 
 \end{document}

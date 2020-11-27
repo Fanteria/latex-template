@@ -89,7 +89,8 @@ class FileSettings:
     def __init__(self, titlepage="titlepage", abstract="abstract",
                 assignment="assignment.pdf", affidavit="affidavit",
                 acknowledgments="acknowledgments",
-                listofabbreviations="listofabbreviations"):
+                listofabbreviations="listofabbreviations",
+                appendiceslist="appendices"):
 
         self.fset = {
             "titlepage" : ("false", titlepage),
@@ -101,7 +102,8 @@ class FileSettings:
             "listofabbreviations" : ("false", listofabbreviations),
             "listoffigures" : ("false", ""),
             "listofgraphs" : ("false", ""),
-            "listoftables" : ("false", "")
+            "listoftables" : ("false", ""),
+            "appendiceslist" : ("false", appendiceslist)
         }
 
     def get_files_list(self):
@@ -110,7 +112,8 @@ class FileSettings:
                  "assignment" : self.fset["assignment"][1],
                  "affidavit" : self.fset["affidavit"][1],
                  "acknowledgments" : self.fset["acknowledgments"][1],
-                 "listofabbreviations" : self.fset["listofabbreviations"][1]}
+                 "listofabbreviations" : self.fset["listofabbreviations"][1],
+                 "appendiceslist" : self.fset["appendiceslist"][1]}
 
     def file_list_tostring(self):
         list = self.get_files_list()
