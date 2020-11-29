@@ -355,6 +355,7 @@ class TemplateMake:
         self.__move_suffix_to_bin(".log")
         self.__move_suffix_to_bin(".out")
         self.__move_suffix_to_bin(".toc")
+        self.__move_suffix_to_bin(".mx1")
         self.__move_suffix_to_bin(".run.xml")
         self.__move_content_waved_to_bin()
 
@@ -535,7 +536,7 @@ class TemplateMake:
             f.endswith(".aux") or f.endswith(".bcf") or
             f.endswith(".log") or f.endswith(".out") or
             f.endswith(".blg") or f.endswith(".toc") or
-            f.endswith(".run.xml")):
+            f.endswith(".mx1") or f.endswith(".run.xml")):
                 try:
                     os.remove(os.path.join(self.project_path, f))
                 except OSError as e:
