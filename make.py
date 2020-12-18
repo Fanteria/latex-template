@@ -376,7 +376,7 @@ class TemplateMake:
 
             if lines[i][:7] == "url = {":
                 lines[i] = lines[i].replace("{\_}","_")
-
+                lines[i] = lines[i].replace("{~}","~")
 
             f.write(lines[i])
 
