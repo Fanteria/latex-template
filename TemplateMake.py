@@ -41,6 +41,10 @@ class TemplateMake:
 
         self.vars = vars
 
+        self.comments = []
+        self.comnames = []
+        self.execcomm = []
+
         if FileSettings is not None:
             self.filesetting = FileSettings()
             if os.path.exists("settings.tex"):
@@ -407,6 +411,9 @@ class TemplateMake:
             arg == "onlyBase" or
             arg == "test"):
             return True
+        for i in range(0, len(self.comnames)):
+            if self.comnames[i] == arg:
+                return True
         return False
 
     def runtime(self, arg, atr=""):
@@ -472,6 +479,11 @@ class TemplateMake:
             self.test()
             return
 
+        for i in range(0, len(self.comnames)):
+            if self.comnames[i] == arg:
+                os.system(self.execcomm[i])
+                return
+
         print("Command " + arg + " does not exist.")
 
     def test(self):
@@ -491,7 +503,17 @@ class TemplateMake:
         self.runtime("help")
 
     def __get_settings(self):
-        str = self.filesetting.file_list_tostring()
+        str = ""
+        for i in range(0, len(self.comments)):
+            str += self.comments[i]
+            str += "\n"
+        for i in range(0, len(self.comnames)):
+            str += "% "
+            str += self.comnames[i]
+            str += " : "
+            str += self.execcomm[i]
+            str += "\n"
+        str += self.filesetting.file_list_tostring()
         str += "\n"
         str += self.filesetting.print_list_tostring()
         str += "\n\\addbibresource{"
@@ -528,6 +550,17 @@ class TemplateMake:
 
             for line in lines:
                 line = line.strip()
+                if len(line) == 0:
+                    continue
+                if line[0] == "%":
+                    pos = line.find(" : ")
+                    if pos == -1:
+                        self.comments.append(line)
+                    else:
+                        line = line[1:]
+                        self.comnames.append(line[:pos].strip())
+                        self.execcomm.append(line[pos+2:].strip())
+                    continue
                 line = re.sub(r'(?m)^ *%.*\n?', '', line)
                 if line != "":
                     self.__process_line(line)
