@@ -1,5 +1,5 @@
-bin/*
-projekt.pdf
+/example/bin/*
+example/projekt.pdf
 projekt.zip
 library.bib
-./settings.tex
+/settings.tex
