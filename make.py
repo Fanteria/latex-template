@@ -356,6 +356,9 @@ class TemplateMake:
         self.__move_suffix_to_bin(".out")
         self.__move_suffix_to_bin(".toc")
         self.__move_suffix_to_bin(".mx1")
+        self.__move_suffix_to_bin(".ext")
+        self.__move_suffix_to_bin(".lof")
+        self.__move_suffix_to_bin(".lot")
         self.__move_suffix_to_bin(".run.xml")
         self.__move_content_waved_to_bin()
 
@@ -388,8 +391,6 @@ class TemplateMake:
     def build(self, content_options="-"):
         if not os.path.exists(self.bin_folder):
             os.makedirs(self.bin_folder)
-
-        #print(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.main))
 
         pdfcmd = " pdflatex -interaction=nonstopmode " + os.path.join(os.path.dirname(os.path.realpath(__file__)), self.main)
         bibcmd = " biber " + self.project_name + ".bcf"
