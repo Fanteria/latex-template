@@ -18,6 +18,7 @@
 %\usepackage[toc,page,title,titletoc]{appendix}
 \usepackage[title,titletoc]{appendix}
 \usepackage{musixtex} %For music notation, can be removed
+\usepackage{listings}
 \let\mxaddspace\addspace\let\addspace\relax
 
 \ExplSyntaxOn
@@ -116,11 +117,13 @@
 
 \NewEnviron{inserttable}[3][]{
 \begin{centering}
+  \vspace{7mm}
   \begin{tabular}{#2}
     \BODY
   \end{tabular}
 \captionof{table}{#3}
 \isempty{#1}{}{\label{#1}}
+\vspace{2mm}
 \end{centering}
 }
 
@@ -233,7 +236,7 @@
 \newcommand{\insertlistoffigures}{
   \ifthenelse{\boolean{listoffigures}}{
     \listoffigures
-    \thispagestyle{empty}
+    %\thispagestyle{empty}
     \newpage
 	}{}
 }
@@ -253,7 +256,7 @@
 \newcommand{\insertlistoftables}{
   \ifthenelse{\boolean{listoftables}}{
     \listoftables
-    \thispagestyle{empty}
+    %\thispagestyle{empty}
     \newpage
 	}{}
 }
@@ -288,7 +291,10 @@
 \widowpenalty 10000
 
 % Nastavení řádkování
-\usepackage{setspace} \onehalfspacing
+%\usepackage{setspace} \onehalfspacing %\doublespacing
+%\usepackage{setspace} \doublespacing
+\linespread{1.426}
+
 
 % Nastavení prolinkování odkazů v dokumentu t metadat dokumentu
 \usepackage[
@@ -379,16 +385,18 @@
 \insertaffidavit
 \insertacknowledgments
 
-\setcounter{page}{1} %cislo strany
 %\thispagestyle{empty}
 
+%\linespread{1}
 \inserttableofcontents
+%\linespread{1.426}
+
 \insertlistofabbreviations
-\insertlistoffigures
-\insertlistofgraphs
-\insertlistoftables
 
 
+\setcounter{page}{1} %cislo strany
+%\setcounter{page}{1} %cislo strany
+%\thispagestyle{empty}
 
 \pagestyle{fancy} %vlastni zahlavi/zapati
 \renewcommand{\headrulewidth}{0.5pt} %bez linky v zahlavi
@@ -405,6 +413,17 @@
 \renewcommand{\refname}{Seznam použitých zdrojů}
 
 \printbibliography
+
+\newpage
+\cleardoublepage
+%\setcounter{page}{25} %cislo strany
+\addcontentsline{toc}{section}{\listfigurename}
+\insertlistoffigures
+
+%\insertlistofgraphs
+\newpage
+\addcontentsline{toc}{section}{\listtablename}
+\insertlistoftables
 
 \insertappendiceslist
 %\begin{appendices}
