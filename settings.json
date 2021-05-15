@@ -1,0 +1,15 @@
+{
+    "title": "TestingTitle",
+    "name": "TestingName",
+
+    "commands": [
+        {
+            "name": "commandOne",
+            "command": "build n1-"
+        },
+        {
+            "name": "commandTwo",
+            "command": "build 1,3,5"
+        }
+    ]
+}

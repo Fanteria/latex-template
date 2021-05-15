@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from SettingsWorker import SettingsWorker
 import sys
+import os
 import getopt
 
-def proccess_args(argv):
+def proccess_args(argv, settingsWorker: SettingsWorker):
     try:
         opts, args = getopt.getopt(argv, "vschf", ["verbose", "silcence", "code", "help", "force"])
         print(args)
@@ -37,9 +39,9 @@ def proccess_args(argv):
         print("full build")
     elif args[0] == "build":
         if len(args) == 1:
-            print("build")
+            print("full build")
         else:
-            print("full build: ", args[1])
+            print("build: ", args[1])
     elif args[0] == "init":
         print("init")
     elif args[0] == "clean":
@@ -57,4 +59,5 @@ def proccess_args(argv):
 
 
 if __name__ == "__main__":
-    proccess_args(sys.argv[1:])
+    settingsWorker = SettingsWorker(os.path.split(os.path.realpath(__file__))[0], os.getcwd())
+    proccess_args(sys.argv[1:], settingsWorker)
