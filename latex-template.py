@@ -17,6 +17,7 @@ def proccess_args(argv):
     flag_verbose = False    # Run program with verbose output.
     flag_force = True       # Force program to update every file.
 
+
     for opt, arg in opts:
         if opt in ("-c", "code"):
             flag_code = True
@@ -35,7 +36,10 @@ def proccess_args(argv):
     if len(args) == 0:
         print("full build")
     elif args[0] == "build":
-        print("build")
+        if len(args) == 1:
+            print("build")
+        else:
+            print("full build: ", args[1])
     elif args[0] == "init":
         print("init")
     elif args[0] == "clean":
@@ -44,6 +48,12 @@ def proccess_args(argv):
         print("clear")
     elif args[0] == "help":
         print("help")
+    elif args[0] == "getref":
+        print("get references to project file")
+    elif args[0] == "pack":
+        print("pack")
+    elif args[0] == "encrypt":
+        print("encrypt")
 
 
 if __name__ == "__main__":
