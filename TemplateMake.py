@@ -8,6 +8,7 @@ import xml.dom.minidom as Dom
 
 from FileSettings import FileSettings
 from Variables import Variables
+from HelpPrinter import HelpPrinter
 
 class TemplateMake:
 
@@ -303,32 +304,6 @@ class TemplateMake:
             except OSError as e:
                 print("Error: %s : %s" % (file_path, e.strerror))
 
-    def only_base(self):
-        self.clear()
-
-        try:
-            if os.path.exists("references.bib"):
-                os.remove("references.bib")
-            if os.path.exists("abstract.tex"):
-                os.remove("abstract.tex")
-            if os.path.exists("acknowledgments.tex"):
-                os.remove("acknowledgments.tex")
-            if os.path.exists("titlepage.tex"):
-                os.remove("titlepage.tex")
-            if os.path.exists("affidavit.tex"):
-                os.remove("affidavit.tex")
-            if os.path.exists("assignment.pdf"):
-                os.remove("assignment.pdf")
-            if os.path.exists("listofabbreviations.tex"):
-                os.remove("listofabbreviations.tex")
-            if os.path.exists("settings.tex"):
-                os.remove("settings.tex")
-            shutil.rmtree("content",ignore_errors=True)
-            shutil.rmtree("pics",ignore_errors=True)
-
-        except OSError as e:
-            print("Error: %s : %s" % (e.strerror))
-
     def pack(self):
         zip = zipfile.ZipFile(self.project_name + ".zip", "w",zipfile.ZIP_DEFLATED)
 
@@ -389,10 +364,6 @@ class TemplateMake:
                 except OSError as e:
                     print("Error: %s : %s" % (f, e.strerror))
 
-    def help(self):
-        print("Unimplemented.")
-
-
 
     ###### RUNTIME ######
     def is_runtime(self, arg):
@@ -403,13 +374,8 @@ class TemplateMake:
             arg == "encrypt" or
             arg == "cleanup" or
             arg == "help" or
-            arg == "print_settings" or
-            arg == "save" or
-            arg == "load" or
             arg == "run" or
-            arg == "init" or
-            arg == "onlyBase" or
-            arg == "test"):
+            arg == "init"):
             return True
         for i in range(0, len(self.comnames)):
             if self.comnames[i] == arg:
@@ -438,10 +404,6 @@ class TemplateMake:
             self.clear()
             return
 
-        if arg == "onlyBase":
-            self.only_base()
-            return
-
         if arg == "pack":
             self.pack()
             return
@@ -460,23 +422,7 @@ class TemplateMake:
             return
 
         if arg == "help":
-            self.help()
-            return
-
-        if arg == "print_settings":
-            print(self.__get_settings())
-            return
-
-        if arg == "save":
-            self.save("settings.tex")
-            return
-
-        if arg == "load":
-            self.load("settings.tex")
-            return
-
-        if arg == "test":
-            self.test()
+            HelpPrinter.help(atr)
             return
 
         for i in range(0, len(self.comnames)):
@@ -485,22 +431,6 @@ class TemplateMake:
                 return
 
         print("Command " + arg + " does not exist.")
-
-    def test(self):
-        print("build")
-        self.runtime("build")
-        print("pack")
-        self.runtime("pack")
-        print("encrypt")
-        self.runtime("encrypt")
-        print("clean")
-        self.runtime("clean")
-        print("clear")
-        self.runtime("clear")
-        print("cleanup")
-        self.runtime("cleanup")
-        print("help")
-        self.runtime("help")
 
     def __get_settings(self):
         str = ""
