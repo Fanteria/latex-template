@@ -65,7 +65,7 @@ def proccess_args(argv, settingsWorker: SettingsWorker):
             else:
                 print("unknown command")
 
-        args.pop()
+        del args[0]
 
 
 if __name__ == "__main__":
