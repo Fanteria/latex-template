@@ -8,7 +8,6 @@ import getopt
 def proccess_args(argv, settingsWorker: SettingsWorker):
     try:
         opts, args = getopt.getopt(argv, "vschf", ["verbose", "silcence", "code", "help", "force"])
-        print(args)
     except:
         print("Invalid: print help")
         sys.exit(2)
@@ -37,27 +36,39 @@ def proccess_args(argv, settingsWorker: SettingsWorker):
 
     if len(args) == 0:
         print("full build")
-    elif args[0] == "build":
-        if len(args) == 1:
-            print("full build")
-        else:
-            print("build: ", args[1])
-    elif args[0] == "init":
-        print("init")
-    elif args[0] == "clean":
-        print("clean")
-    elif args[0] == "clear":
-        print("clear")
-    elif args[0] == "help":
-        print("help")
-    elif args[0] == "getref":
-        print("get references to project file")
-    elif args[0] == "pack":
-        print("pack")
-    elif args[0] == "encrypt":
-        print("encrypt")
+        return
+
+    while len(args) > 0:
+        if args[0] == "build":
+            if len(args) == 1: # or next is not valid argument for build
+                print("full build")
+            else:
+                print("build: ", args[1])
+        elif args[0] == "init":
+            print("init")
+        elif args[0] == "clean":
+            print("clean")
+        elif args[0] == "clear":
+            print("clear")
+        elif args[0] == "help":
+            print("help")
+        elif args[0] == "getref":
+            print("get references to project file")
+        elif args[0] == "pack":
+            print("pack")
+        elif args[0] == "encrypt":
+            print("encrypt")
+        else: 
+            user_commands = settingsWorker.get_list_of_commands()
+            if args[0] in user_commands:
+                print(user_commands[args[0]])
+            else:
+                print("unknown command")
+
+        args.pop()
 
 
 if __name__ == "__main__":
     settingsWorker = SettingsWorker(os.path.split(os.path.realpath(__file__))[0], os.getcwd())
     proccess_args(sys.argv[1:], settingsWorker)
+    #print(settingsWorker.get_list_of_commands())
