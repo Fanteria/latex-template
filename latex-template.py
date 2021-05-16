@@ -6,7 +6,7 @@ import sys
 import os
 import getopt
 
-def proccess_args(argv, settingsWorker: SettingsWorker):
+def proccess_args(argv, settingsWorker: SettingsWorker, latexInputWorker: SettingsWorker):
     try:
         opts, args = getopt.getopt(argv, "vschf", ["verbose", "silcence", "code", "help", "force"])
     except:
@@ -43,6 +43,7 @@ def proccess_args(argv, settingsWorker: SettingsWorker):
         if args[0] == "build":
             if len(args) == 1: # or next is not valid argument for build
                 print("full build")
+                latexInputWorker.all_file_list()
             else:
                 print("build: ", args[1])
         elif args[0] == "init":
@@ -72,5 +73,5 @@ def proccess_args(argv, settingsWorker: SettingsWorker):
 if __name__ == "__main__":
     settingsWorker = SettingsWorker(os.path.split(os.path.realpath(__file__))[0], os.getcwd())
     latexInputWorker = LatexInputWorker(settingsWorker)
-    proccess_args(sys.argv[1:], settingsWorker)
+    proccess_args(sys.argv[1:], settingsWorker, latexInputWorker)
     
