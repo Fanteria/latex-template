@@ -6,6 +6,8 @@ class SettingsWorker:
 
 
     def __init__(self, base_path: str, working_path: str):
+        self.base_path = base_path
+        self.working_path = working_path
         base_file = os.path.join(base_path, SettingsWorker.__file_name)
         working_file = os.path.join(working_path, SettingsWorker.__file_name)
 
@@ -28,4 +30,10 @@ class SettingsWorker:
             ret[i["name"]] = i["command"]
 
         return ret
+
+    def get_content_path(self, relative=True):
+        if relative:
+            return os.path.join(".", self.data["content-path"])
+        else:
+            return os.path.join(self.working_path, self.data["content-path"])
         

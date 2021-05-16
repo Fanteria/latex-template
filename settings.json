@@ -2,6 +2,7 @@
     "title": "TestingTitle",
     "name": "TestingName",
     "key-words": "key1, key2",
+    "content-path": "content",
 
     "commands": [
         {

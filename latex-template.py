@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from LatexInputWorker import LatexInputWorker
 from SettingsWorker import SettingsWorker
 import sys
 import os
@@ -70,5 +71,6 @@ def proccess_args(argv, settingsWorker: SettingsWorker):
 
 if __name__ == "__main__":
     settingsWorker = SettingsWorker(os.path.split(os.path.realpath(__file__))[0], os.getcwd())
+    latexInputWorker = LatexInputWorker(settingsWorker)
     proccess_args(sys.argv[1:], settingsWorker)
-    #print(settingsWorker.get_list_of_commands())
+    
