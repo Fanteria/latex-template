@@ -41,11 +41,16 @@ def proccess_args(argv, settingsWorker: SettingsWorker, latexInputWorker: Settin
 
     while len(args) > 0:
         if args[0] == "build":
-            if len(args) == 1: # or next is not valid argument for build
+            if len(args) == 1: # It's last argument.
                 print("full build")
                 latexInputWorker.all_file_list()
             else:
-                print("build: ", args[1])
+                files_list = latexInputWorker.proccess_files(args[1])
+                if files_list == None: # Next argument is not list of files.
+                    print("FULL build")
+                else: # Next argument is list of files.
+                    print("build: ", files_list)
+                    del args[0]
         elif args[0] == "init":
             print("init")
         elif args[0] == "clean":
@@ -65,7 +70,7 @@ def proccess_args(argv, settingsWorker: SettingsWorker, latexInputWorker: Settin
             if args[0] in user_commands:
                 print(user_commands[args[0]])
             else:
-                print("unknown command")
+                print("unknown command:", args[0])
 
         del args[0]
 
