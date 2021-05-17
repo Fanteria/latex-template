@@ -6,8 +6,7 @@ import re
 class LatexInputWorker:
     
     def __init__(self, settingsWorker: SettingsWorker):
-        self.content_path = settingsWorker.get_content_path()
-        self.files = os.listdir(self.content_path)
+        self.files = os.listdir(settingsWorker.get_content_path())
         self.files.sort()
 
     # Create from input string list of file names, if input is invalid, return None.
