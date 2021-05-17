@@ -33,7 +33,13 @@ class SettingsWorker:
 
     def get_content_path(self, relative=True):
         if relative:
-            return os.path.join(".", self.data["content-path"])
+            return os.path.join(".", self.data["content-folder"])
         else:
-            return os.path.join(self.working_path, self.data["content-path"])
+            return os.path.join(self.working_path, self.data["content-folder"])
+
+    def get_gen_path(self, relative=True):
+        if relative:
+            return os.path.join(".", self.data["generated-folder"])
+        else:
+            return os.path.join(self.working_path, self.data["generated-folder"])
         
